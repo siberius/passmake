@@ -1,0 +1,2687 @@
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Passmake - Leet Speak Generator</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 90,27 90,73 50,95 10,73 10,27' fill='none' stroke='%2300f0ff' stroke-width='12'/></svg>">
+  <style>
+    :root {
+      --neon-cyan: #00f0ff;
+      --neon-magenta: #ff00ff;
+      --neon-orange: #ff6600;
+      --neon-green: #39ff14;
+      --dark-bg: #0a0a0f;
+      --dark-surface: #12121a;
+      --dark-card: #1a1a25;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--dark-bg);
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    @media (min-width: 640px) {
+      body { font-size: 18px; }
+    }
+    /* Scanlines */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
+      z-index: 1000;
+    }
+    /* Glitch */
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); }
+      20% { transform: translate(-1px, 1px); }
+      40% { transform: translate(-1px, -1px); }
+      60% { transform: translate(1px, 1px); }
+      80% { transform: translate(1px, -1px); }
+    }
+    .glitch-text {
+      animation: glitch 6s infinite;
+      text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan);
+    }
+    .neon-cyan { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
+    .neon-magenta { color: var(--neon-magenta); text-shadow: 0 0 10px var(--neon-magenta); }
+    .neon-orange { color: var(--neon-orange); text-shadow: 0 0 10px var(--neon-orange); }
+    
+    /* Layout */
+    .app { display: flex; flex-direction: column; min-height: 100vh; }
+    
+    /* Header */
+    .header {
+      position: sticky; top: 0; z-index: 100;
+      background: linear-gradient(180deg, var(--dark-bg) 0%, rgba(10,10,15,0.95) 100%);
+      backdrop-filter: blur(10px);
+      padding: 1rem; border-bottom: 1px solid rgba(0,240,255,0.3);
+    }
+    .header-content {
+      max-width: 900px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .logo { font-size: 1.25rem; font-weight: bold; }
+    
+    /* Hamburger */
+    .hamburger {
+      width: 44px; height: 44px;
+      display: flex; flex-direction: column; justify-content: space-around;
+      align-items: center;
+      cursor: pointer; background: none; border: none;
+      padding: 10px;
+    }
+    .hamburger span {
+      display: block; height: 3px; width: 100%;
+      background: var(--neon-cyan); border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+    
+    /* Dots button */
+    .dots-btn {
+      background: none; border: none; cursor: pointer;
+      padding: 12px; border-radius: 50%;
+      transition: background 0.3s;
+    }
+    .dots-btn:hover { background: rgba(0,240,255,0.2); }
+    
+    /* Mobile Menu */
+    .mobile-menu {
+      position: fixed; top: 60px; left: 0;
+      width: 300px; max-width: 85vw; height: calc(100vh - 60px);
+      background: var(--dark-surface);
+      border-right: 1px solid var(--neon-cyan);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 99; overflow-y: auto; padding: 1rem;
+    }
+    .mobile-menu.open { transform: translateX(0); }
+    
+    /* Main */
+    main {
+      flex: 1; padding: 1rem;
+      max-width: 900px; margin: 0 auto; width: 100%;
+    }
+    
+    /* Cards */
+    .cyber-card {
+      background: linear-gradient(135deg, var(--dark-card) 0%, var(--dark-surface) 100%);
+      border: 1px solid rgba(0,240,255,0.3);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,240,255,0.1), inset 0 0 20px rgba(0,0,0,0.5);
+    }
+    
+    /* Inputs */
+    .cyber-input {
+      width: 100%; padding: 1rem;
+      background: var(--dark-surface);
+      border: 2px solid rgba(0,240,255,0.5);
+      border-radius: 8px; color: #e0e0e0;
+      font-family: 'Courier New', monospace; font-size: 1rem;
+      resize: vertical; outline: none;
+      transition: all 0.3s;
+    }
+    .cyber-input:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 20px rgba(0,240,255,0.3);
+    }
+    .cyber-input.output {
+      border-color: var(--neon-magenta);
+      background: rgba(255,0,255,0.05);
+    }
+    .cyber-input.output:focus {
+      border-color: var(--neon-orange);
+      box-shadow: 0 0 15px rgba(255,102,0,0.3);
+    }
+    
+    /* Selects */
+    select {
+      width: 100%; padding: 0.65rem 2rem 0.65rem 0.8rem;
+      background: var(--dark-surface)
+        url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300f0ff'/%3E%3C/svg%3E")
+        no-repeat right 0.8rem center;
+      border: 2px solid rgba(0,240,255,0.5);
+      border-radius: 8px; color: #e0e0e0;
+      font-family: 'Courier New', monospace; font-size: 0.95rem;
+      appearance: none; -webkit-appearance: none; -moz-appearance: none;
+      outline: none; cursor: pointer;
+      transition: all 0.3s;
+    }
+    select:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 20px rgba(0,240,255,0.3);
+    }
+    select:hover { border-color: rgba(0,240,255,0.75); }
+    select option {
+      background: #101018; color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+    }
+    
+    /* Toggles */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.5rem 0;
+    }
+    .cyber-toggle {
+      width: 50px; height: 26px;
+      background: var(--dark-surface);
+      border: 2px solid rgba(0,240,255,0.5);
+      border-radius: 13px; cursor: pointer;
+      position: relative; transition: all 0.3s;
+    }
+    .cyber-toggle::after {
+      content: ''; position: absolute;
+      width: 18px; height: 18px;
+      background: rgba(0,240,255,0.5);
+      border-radius: 50%;
+      top: 2px; left: 2px;
+      transition: all 0.3s;
+    }
+    .cyber-toggle.active {
+      background: rgba(0,240,255,0.2);
+      border-color: var(--neon-cyan);
+    }
+    .cyber-toggle.active::after {
+      left: 26px;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 10px var(--neon-cyan);
+    }
+    
+    /* Char buttons */
+    .char-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .char-btn {
+      display: flex; align-items: center;
+      padding: 8px 12px;
+      background: var(--dark-surface);
+      border: 1px solid rgba(0,240,255,0.3);
+      border-radius: 6px; cursor: pointer;
+      color: #e0e0e0; font-family: 'Courier New', monospace;
+      transition: all 0.3s;
+    }
+    .char-btn:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0,240,255,0.3);
+    }
+    .char-btn.selected {
+      background: rgba(0,240,255,0.1);
+      border-color: var(--neon-cyan);
+    }
+    .char-btn.space {
+      background: linear-gradient(135deg, rgba(255,102,0,0.2), rgba(255,0,255,0.2));
+      border-color: var(--neon-orange);
+      min-width: 60px;
+    }
+    .char-btn .orig { font-size: 0.75rem; opacity: 0.5; margin-right: 4px; }
+    
+    /* Strength bar */
+    .strength-bar {
+      height: 8px; background: var(--dark-surface);
+      border-radius: 4px; overflow: hidden;
+      border: 1px solid rgba(0,240,255,0.2);
+    }
+    .strength-fill {
+      height: 100%;
+      transition: width 0.5s, background 0.5s;
+      border-radius: 4px;
+    }
+    
+    /* Case buttons */
+    .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .case-btn {
+      padding: 0.5rem; border-radius: 6px;
+      background: var(--dark-surface);
+      border: 1px solid rgba(100,100,100,0.5);
+      color: #999; cursor: pointer;
+      font-family: 'Courier New', monospace;
+      transition: all 0.3s;
+    }
+    .case-btn.active {
+      background: rgba(0,240,255,0.2);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+    }
+    
+    /* Stats */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
+    }
+    @media (min-width: 640px) {
+      .stats-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .stat-value { font-size: 1.25rem; }
+    
+    /* Footer */
+    .footer {
+      position: sticky; bottom: 0; z-index: 100;
+      background: linear-gradient(0deg, var(--dark-bg) 0%, rgba(10,10,15,0.95) 100%);
+      backdrop-filter: blur(10px);
+      padding: 0.75rem 1rem; border-top: 1px solid rgba(0,240,255,0.3);
+    }
+    .footer-content {
+      max-width: 900px; margin: 0 auto;
+      display: flex; justify-content: space-between;
+      font-size: 0.75rem;
+    }
+    
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 200;
+      display: none; align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--dark-card);
+      border: 2px solid var(--neon-magenta);
+      border-radius: 12px;
+      padding: 1.5rem; max-width: 400px; width: 100%;
+      position: relative; text-align: center;
+    }
+    .modal-corner-tl {
+      position: absolute; top: 0; left: 0;
+      width: 40px; height: 40px;
+      border-top: 2px solid rgba(0,240,255,0.5);
+      border-left: 2px solid rgba(0,240,255,0.5);
+    }
+    .modal-corner-br {
+      position: absolute; bottom: 0; right: 0;
+      width: 40px; height: 40px;
+      border-bottom: 2px solid rgba(255,0,255,0.5);
+      border-right: 2px solid rgba(255,0,255,0.5);
+    }
+    .confirm-btn {
+      margin-top: 1.5rem; width: 100%;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(255,0,255,0.2));
+      border: 1px solid rgba(0,240,255,0.5);
+      border-radius: 8px; color: var(--neon-cyan);
+      font-size: 1.1rem; letter-spacing: 2px;
+      cursor: pointer; transition: all 0.3s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .confirm-btn:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 20px rgba(0,240,255,0.3);
+    }
+    
+    /* Action buttons */
+    .action-btns {
+      position: absolute; top: 8px; right: 8px;
+      display: flex; gap: 8px;
+    }
+    .action-btn {
+      padding: 12px; background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(0,240,255,0.4);
+      border-radius: 6px;
+      cursor: pointer; transition: all 0.3s;
+    }
+    .action-btn:hover { 
+      background: rgba(0,240,255,0.2); 
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0,240,255,0.4);
+    }
+    .action-btn svg { color: var(--neon-cyan); opacity: 1; }
+    
+    /* Section */
+    section { margin-bottom: 1.5rem; }
+    .section-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.875rem; margin-bottom: 0.5rem;
+    }
+    .edited-badge {
+      font-size: 0.75rem; display: flex; align-items: center; gap: 4px;
+      margin-left: 8px;
+    }
+    
+    /* Utility */
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .pt-3 { padding-top: 0.75rem; }
+    .border-t { border-top: 1px solid rgba(0,240,255,0.2); }
+    .text-sm { font-size: 0.9rem; }
+    .text-xs { font-size: 0.78rem; }
+    .opacity-50 { opacity: 0.5; }
+    .opacity-70 { opacity: 0.7; }
+    /* Lepší kontrast místo opacity - konkrétní odstíny */
+    .dim-70 { color: #b8b8c6; }
+    .dim-50 { color: #9a9ab0; }
+    
+    /* Mode switch */
+    .mode-switch {
+      display: flex; gap: 6px;
+      margin: 0.75rem 0 1rem;
+      border-bottom: 2px solid rgba(0,240,255,0.25);
+    }
+    .mode-btn {
+      flex: 1; padding: 0.85rem 0.4rem 0.7rem; cursor: pointer;
+      background: transparent;
+      border: none; border-bottom: 2px solid transparent;
+      color: #9a9ab0;
+      font-family: 'Courier New', monospace; font-size: 0.9rem; letter-spacing: 1px;
+      white-space: nowrap; transition: all 0.3s;
+    }
+    .mode-btn:hover { color: var(--neon-cyan); }
+    .mode-btn.active {
+      color: var(--neon-cyan); font-weight: bold;
+      border-bottom-color: var(--neon-cyan);
+      background: linear-gradient(180deg, rgba(0,240,255,0.16), rgba(0,240,255,0.03));
+      text-shadow: 0 0 12px rgba(0,240,255,0.65);
+    }
+    @media (max-width: 480px) { .mode-btn { font-size: 0.78rem; letter-spacing: 0.5px; white-space: normal; } }
+    
+    /* Trainer */
+    .trainer-hidden { display: none; }
+    .trainer-banner {
+      padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem;
+      background: linear-gradient(135deg, rgba(0,240,255,0.12), rgba(255,0,255,0.08));
+      border: 1px solid rgba(0,240,255,0.3);
+    }
+    .trainer-banner .level-title { font-size: 1.1rem; font-weight: bold; }
+    
+    .level-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+    @media (max-width: 620px) { .level-cards { grid-template-columns: 1fr; } }
+    .level-card {
+      padding: 0.75rem; border-radius: 8px; cursor: pointer;
+      background: var(--dark-surface);
+      border: 2px solid rgba(100,100,100,0.4);
+      transition: all 0.3s; text-align: center;
+    }
+    .level-card.selected { border-color: var(--neon-cyan); background: rgba(0,240,255,0.12); }
+    .level-card .lc-name { font-weight: bold; font-size: 1rem; }
+    .level-card .lc-length { font-size: 0.8rem; color: #b8b8c6; }
+    
+    .rule-list { list-style: none; margin-top: 0.5rem; }
+    .rule-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 0.6rem 0.5rem; margin-bottom: 6px;
+      border-radius: 6px; border: 1px solid rgba(100,100,100,0.3);
+      font-size: 0.9rem; line-height: 1.4; transition: all 0.3s;
+    }
+    .rule-item .rule-icon { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    .rule-item .rule-bul { flex-shrink: 0; color: #9a9ab0; font-size: 0.7rem; align-self: center; margin-left: 2px; }
+    .rule-item.ok .rule-bul { color: #39ff14; }
+    .rule-item.fail .rule-bul { color: #ff6600; }
+    .rule-item.pending { color: #e0e0e0; }
+    .rule-item.pending .rule-icon { color: #9a9ab0; }
+    .rule-item.ok {
+      border-color: rgba(57,255,20,0.4); background: rgba(57,255,20,0.06); color: #c8f7c0;
+    }
+    .rule-item.ok .rule-icon { color: #39ff14; }
+    .rule-item.fail {
+      border-color: rgba(255,51,51,0.5); background: rgba(255,51,51,0.07); color: #ffc2c2;
+    }
+    .rule-item.fail .rule-icon { color: #ff3333; }
+    
+    .trainer-password-row {
+      display: flex; align-items: center; gap: 8px; position: relative;
+    }
+    .trainer-pw { padding-right: 44px; }
+    .pw-toggle {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; padding: 10px;
+    }
+    .hint-box {
+      margin-top: 0.75rem; padding: 0.75rem; border-radius: 8px;
+      background: rgba(255,102,0,0.08); border: 1px dashed rgba(255,102,0,0.5);
+      font-size: 0.9rem; line-height: 1.5;
+    }
+    .suggest-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 0.75rem; }
+    .suggest-btn {
+      padding: 0.6rem 0.9rem; cursor: pointer;
+      background: rgba(255,0,255,0.1);
+      border: 1px solid var(--neon-magenta); border-radius: 6px;
+      color: var(--neon-magenta); font-family: 'Courier New', monospace; font-size: 0.85rem;
+    }
+    .suggest-btn:hover { background: rgba(255,0,255,0.2); }
+    
+    /* Quality metrics & diagnostics */
+    .trainer-metrics {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 0.9rem;
+    }
+    @media (max-width: 620px) { .trainer-metrics { grid-template-columns: 1fr; } }
+    .metric {
+      background: var(--dark-surface); border: 1px solid rgba(100,100,100,0.35);
+      border-radius: 8px; padding: 0.6rem 0.7rem;
+    }
+    .metric .m-label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.78rem; color: #9a9ab0; letter-spacing: 1px;
+    }
+    .metric .m-value { font-weight: bold; white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
+    .metric .m-track {
+      height: 8px; background: rgba(100,100,100,0.3); border-radius: 4px;
+      margin-top: 7px; overflow: hidden;
+    }
+    .metric .m-fill { height: 100%; width: 0%; border-radius: 4px; transition: width 0.35s; }
+    .m-cyan  .m-fill { background: linear-gradient(90deg, var(--neon-cyan), rgba(0,240,255,0.35)); }
+    .m-green .m-fill { background: linear-gradient(90deg, #39ff14, rgba(57,255,20,0.35)); }
+    .m-orange .m-fill { background: linear-gradient(90deg, #ff6600, rgba(255,102,0,0.35)); }
+    
+    /* Tabs laboratoř / ověření */
+    .trainer-tabs {
+      display: flex; gap: 6px; margin: 0 0 1rem;
+      border-bottom: 2px solid rgba(0,240,255,0.25);
+    }
+    .trainer-tabs .tab-btn {
+      flex: 1; padding: 0.7rem 0.4rem; cursor: pointer;
+      background: transparent; border: none; border-bottom: 2px solid transparent;
+      color: #9a9ab0;
+      font-family: 'Courier New', monospace; font-size: 0.85rem; letter-spacing: 1px;
+      white-space: nowrap; transition: all 0.3s;
+    }
+    .trainer-tabs .tab-btn:hover { color: var(--neon-cyan); }
+    .trainer-tabs .tab-btn.active {
+      color: var(--neon-cyan); font-weight: bold;
+      border-bottom-color: var(--neon-cyan);
+      background: linear-gradient(180deg, rgba(0,240,255,0.16), rgba(0,240,255,0.03));
+      text-shadow: 0 0 12px rgba(0,240,255,0.65);
+    }
+    @media (max-width: 520px) { .trainer-tabs .tab-btn { font-size: 0.74rem; letter-spacing: 0.4px; white-space: normal; } }
+    
+    /* Pás NÁPADŮ: rotující tipy + žárovka, která občas zazáří */
+    .tip-strip {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: "bulb main btn";
+      column-gap: 12px; row-gap: 6px; align-items: start;
+      background: rgba(255,0,255,0.05); border: 1px solid rgba(255,0,255,0.28);
+      border-radius: 10px; padding: 0.6rem 0.8rem; margin: 0 0 1rem;
+    }
+    .tip-bulb {
+      grid-area: bulb; align-self: start; padding-top: 2px;
+      font-size: 1.5rem; line-height: 1;
+      filter: grayscale(0.6) brightness(0.85); transition: filter 0.25s ease;
+    }
+    .tip-bulb.on {
+      filter: grayscale(0) brightness(1.25) drop-shadow(0 0 10px rgba(255,220,80,0.95));
+      transform: scale(1.12);
+      animation: bulb-glow 0.8s ease-in-out infinite alternate;
+    }
+    @keyframes bulb-glow { from { filter: grayscale(0) brightness(1.15); } to { filter: grayscale(0) brightness(1.5) drop-shadow(0 0 16px rgba(255,220,80,1)); } }
+    .tip-main { grid-area: main; min-width: 0; }
+    .tip-tag { display: block; font-size: 0.7rem; letter-spacing: 1.5px; color: var(--neon-magenta); font-weight: bold; margin-bottom: 2px; }
+    .tip-text { font-size: 0.87rem; line-height: 1.45; color: #cfe3ff; }
+    .tip-next {
+      grid-area: btn; justify-self: end; align-self: center; cursor: pointer;
+      background: rgba(0,240,255,0.08); border: 1px solid rgba(0,240,255,0.35);
+      color: var(--neon-cyan); border-radius: 8px; padding: 0.4rem 0.7rem;
+      font-family: 'Courier New', monospace; font-size: 0.75rem; letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    .tip-next:hover { background: rgba(0,240,255,0.18); }
+    @media (max-width: 600px) {
+      .tip-strip {
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+          "bulb main"
+          "btn  btn";
+      }
+      .tip-next { justify-self: start; align-self: start; margin-top: 6px; }
+    }
+    .name-label { display: block; margin: 0.5rem 0 0.3rem; font-size: 0.85rem; color: #cfe3ff; }
+    
+    /* Plovoucí hinty: co k čemu slouží (hover/focus) */
+    .ctrl-hint {
+      position: relative; display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 50%; margin-left: 8px; vertical-align: middle;
+      border: 1px solid rgba(255,0,255,0.45); background: rgba(255,0,255,0.1);
+      color: var(--neon-magenta); cursor: help; z-index: 5;
+    }
+    .ctrl-hint svg { display: block; }
+    .ctrl-hint::after {
+      content: attr(data-tip);
+      position: absolute; top: calc(100% + 10px); left: 0; z-index: 60;
+      width: max-content; max-width: 300px;
+      background: linear-gradient(160deg, #0d1330, #070b1c);
+      border: 1px solid rgba(0,240,255,0.5); border-radius: 10px; padding: 10px 12px;
+      color: #dbeaff; font-size: 0.8rem; font-weight: normal; line-height: 1.55;
+      box-shadow: 0 0 16px rgba(0,240,255,0.25), 0 6px 24px rgba(0,0,0,0.6);
+      opacity: 0; visibility: hidden; transform: translateY(-4px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+    }
+    .ctrl-hint:hover::after, .ctrl-hint:focus::after {
+      opacity: 1; visibility: visible; transform: translateY(0);
+    }
+    @media (max-width: 560px) {
+      .ctrl-hint::after { max-width: 230px; }
+    }
+    /* Drobné „plovoucí“ upozornění, že možnosti jsou v menu */
+    .menu-hint-strip {
+      display: flex; align-items: center; gap: 10px; margin: 0 0 1rem; padding: 0.6rem 0.8rem;
+      background: rgba(0,240,255,0.06); border: 1px dashed rgba(0,240,255,0.4);
+      border-radius: 8px; font-size: 0.82rem; color: #cfe3ff; line-height: 1.5;
+    }
+    .menu-hint-strip .mh-icon { flex: 0 0 auto; font-size: 1.2rem; }
+    
+    /* Ověření znalosti */
+    .verify-stamp {
+      margin-top: 1rem; padding: 0.9rem 1rem; border-radius: 10px;
+      border: 2px solid #39ff14; background: rgba(57,255,20,0.08);
+      color: #39ff14; font-weight: bold; text-align: center; font-size: 1.05rem;
+      box-shadow: 0 0 18px rgba(57,255,20,0.2);
+    }
+    .verify-stamp .vs-sub { font-weight: normal; font-size: 0.8rem; color: #bcd4c8; margin-top: 0.3rem; }
+    
+    .trainer-weak {
+      margin-top: 0.7rem; padding: 0.6rem 0.75rem; border-radius: 8px; font-size: 0.88rem;
+      background: rgba(255,102,0,0.08); border: 1px dashed rgba(255,102,0,0.5); line-height: 1.5;
+    }
+    .trainer-weak.ok { background: rgba(57,255,20,0.07); border-color: rgba(57,255,20,0.4); }
+    
+    .diag-list { list-style: none; margin-top: 0.6rem; }
+    .diag-item {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+      padding: 0.6rem 0.7rem; margin-top: 6px; border-radius: 6px;
+      border: 1px solid rgba(255,0,255,0.3); background: rgba(255,0,255,0.05);
+      font-size: 0.85rem; line-height: 1.45;
+    }
+    .diag-item .diag-desc { flex: 1 1 220px; }
+    .diag-item .diag-apply {
+      padding: 0.6rem 1rem; min-height: 44px; cursor: pointer;
+      background: rgba(0,240,255,0.12); border: 1px solid var(--neon-cyan); border-radius: 6px;
+      color: var(--neon-cyan); font-family: 'Courier New', monospace; font-size: 0.85rem;
+    }
+    .diag-item .diag-apply:hover { background: rgba(0,240,255,0.22); }
+    
+    /* Gate (úvodní panely + kvíz) */
+    .gate-panel { padding: 1rem; }
+    .gate-panel .gate-title { font-size: 1.05rem; margin-bottom: 0.6rem; }
+    .gate-panel .gate-body { line-height: 1.6; font-size: 0.92rem; }
+    .gate-dots { display: flex; gap: 6px; justify-content: center; margin-top: 0.9rem; }
+    .gate-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(0,240,255,0.2); transition: background 0.25s; }
+    .gate-dot.on { background: var(--neon-cyan); }
+    
+    /* Quiz */
+    .quiz-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .quiz-tag {
+      font-size: 0.72rem; letter-spacing: 1px; padding: 3px 9px; border-radius: 999px;
+      border: 1px solid rgba(255,0,255,0.5); color: var(--neon-magenta); white-space: nowrap;
+    }
+    .quiz-q { font-size: 1rem; line-height: 1.55; margin: 0.85rem 0; min-height: 2.2em; }
+    .quiz-options { display: grid; gap: 8px; }
+    .quiz-opt {
+      text-align: left; padding: 0.75rem 0.9rem; border-radius: 8px; min-height: 44px;
+      border: 1px solid rgba(0,240,255,0.35); background: rgba(0,240,255,0.05);
+      color: var(--text); cursor: pointer; font-family: 'Courier New', monospace;
+      font-size: 0.93rem; line-height: 1.4;
+    }
+    .quiz-opt:hover:not(:disabled) { background: rgba(0,240,255,0.14); }
+    .quiz-opt.correct { border-color: #39ff14; background: rgba(57,255,20,0.12); color: #39ff14; }
+    .quiz-opt.selected { border-color: var(--neon-cyan); background: rgba(0,240,255,0.22); box-shadow: inset 0 0 0 1px var(--neon-cyan); }
+    .quiz-opt.correct.selected { box-shadow: none; }
+    .quiz-opt.wrong { border-color: #ff6600; background: rgba(255,102,0,0.14); color: #ff6600; text-decoration: underline; }
+    .quiz-opt:disabled { cursor: default; }
+    .quiz-feedback { margin-top: 0.7rem; font-size: 0.9rem; line-height: 1.5; min-height: 1.3em; }
+    .quiz-fb-ok { color: #39ff14; }
+    .quiz-fb-bad { color: #ff6600; }
+    .quiz-grade-num {
+      font-size: 3.2rem; font-weight: bold; line-height: 1.1;
+      text-shadow: 0 0 18px rgba(255,0,255,0.55);
+    }
+    .quiz-bloom-line { display: flex; flex-wrap: wrap; gap: 4px 14px; justify-content: center; margin-top: 0.4rem; font-size: 0.82rem; }
+    .quiz-bloom-line .qb-ok { color: #39ff14; }
+    .quiz-bloom-line .qb-bad { color: #ff6600; }
+    
+    /* Rubrika O PROGRAMU ve spodní části hamburger menu */
+    .menu-about { margin-top: 1.5rem; border-top: 1px solid rgba(255,0,255,0.3); padding-top: 0.9rem; }
+    .about-block { margin-top: 0.6rem; border: 1px solid rgba(0,240,255,0.25); border-radius: 8px; background: rgba(0,240,255,0.04); }
+    .about-block summary {
+      cursor: pointer; padding: 0.7rem 0.8rem; font-weight: bold; color: var(--neon-cyan);
+      list-style: none; display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: 0.95rem;
+    }
+    .about-block summary::-webkit-details-marker { display: none; }
+    .about-block[open] summary { border-bottom: 1px solid rgba(0,240,255,0.2); }
+    .about-body { padding: 0.75rem 0.8rem; font-size: 0.86rem; line-height: 1.65; color: #c9d4ff; }
+    .about-body .kredit-row { margin-top: 0.5rem; }
+    
+    /* Certificate (paleta = proměnné --cert-a / --cert-b, nastavované JS) */
+    .certificate {
+      background: linear-gradient(135deg, var(--dark-card), var(--dark-surface));
+      border: 2px solid var(--cert-a, var(--neon-green));
+      border-radius: 12px;
+      padding: 1.5rem; text-align: center; position: relative;
+      box-shadow: 0 0 30px var(--cert-a, rgba(57,255,20,0.15));
+    }
+    .cert-corner { position: absolute; width: 34px; height: 34px; }
+    .cert-corner.tl { top: 10px; left: 10px; border-top: 2px solid var(--cert-a, var(--neon-green)); border-left: 2px solid var(--cert-a, var(--neon-green)); }
+    .cert-corner.br { bottom: 10px; right: 10px; border-bottom: 2px solid var(--cert-a, var(--neon-green)); border-right: 2px solid var(--cert-a, var(--neon-green)); }
+    .cert-title { font-size: 1.3rem; font-weight: bold; color: var(--cert-b, #39ff14); }
+    .cert-seq { height: 1px; background: var(--cert-b, rgba(57,255,20,0.5)); margin: 1rem 0; }
+    .cert-palette {
+      display: inline-block; margin-top: 0.9rem; font-size: 0.78rem; letter-spacing: 1px;
+      padding: 4px 12px; border-radius: 999px;
+      border: 1px solid var(--cert-a, var(--neon-green)); color: var(--cert-b, #39ff14);
+    }
+    .certify-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 1.2rem; }
+    .certify-row .confirm-btn { width: 100%; justify-content: center; gap: 8px; }
+    .confirm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    
+    /* Finger-friendly touch targets */
+    .pw-toggle { min-width: 44px; min-height: 44px; padding: 12px; }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+          <h1 class="logo neon-cyan glitch-text">CYBER PASSMAKE</h1>
+        </div>
+        <div class="header-right">
+          <svg class="neon-magenta" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <h3 class="neon-cyan mb-4" style="display:flex;align-items:center;gap:8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 3v4h4"/><path d="M3 21l18-18"/><path d="M7 21h-4v-4"/>
+        </svg>
+        MOŽNOSTI TRANSFORMACE
+      </h3>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+        <div>
+          <label class="text-xs opacity-70">Úroveň</label>
+          <select id="levelSelect"></select>
+        </div>
+        <div>
+          <label class="text-xs opacity-70">Profil</label>
+          <select id="profileSelect"></select>
+        </div>
+      </div>
+      
+      <div id="togglesContainer"></div>
+      
+      <div class="pt-3 border-t">
+        <span class="text-sm opacity-70 mb-2" style="display:block;">Velikost písmen</span>
+        <div class="case-grid" id="caseGrid"></div>
+      </div>
+      
+      <!-- Rubrika O PROGRAMU: JAK TO FUNGUJE + KREDIT (dole v menu) -->
+      <section class="menu-about">
+        <span class="text-xs opacity-70" style="display:block;margin-bottom:0.2rem;">O PROGRAMU</span>
+        
+        <details class="about-block">
+          <summary><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg> JAK TO FUNGUJE</summary>
+          <div class="about-body">
+            <p><span class="neon-cyan" style="font-weight:bold;">Kódování a leet speak.</span>
+              Počítač si text nepamatuje „znaky“, ale <em>kódy</em> (čísla). Leet speak je záměrné
+              pře-kódování: stejný obsah jinými znaky — <span class="neon-magenta">a → 4, e → 3, o → 0</span>.</p>
+            <p style="margin-top:0.6rem;"><span class="neon-orange" style="font-weight:bold;">Trenažér = mechanika zxcvbn.</span>
+              Odhalí v heslu <em>vzory</em> a <em>slabiny</em>: slova ze slovníků (čeština + angličtina),
+              častá hesla, procházky po klávesnici, sekvence, opakování a data. Potom spočítá
+              <span class="neon-green" style="font-weight:bold;">efektivní entropii</span> — reálnou sílu
+              tak, jak ji vidí cracker. Přitom používá stejné principy jako knihovna
+              <span class="neon-cyan" style="font-weight:bold;">zxcvbn</span> z Dropboxu.</p>
+            <p style="margin-top:0.6rem;"><span class="neon-magenta" style="font-weight:bold;">Kvíz = samostatná záložka.</span>
+              20+ otázek (úrovně dle Bloomovy taxonomie), část s více správnými odpověďmi — za špatnou
+              odpověď se ukáže vysvětlení, proč to tak je. Na 100 % → vlastní certifikát kvízu (PNG).
+              Trenažér hesel je oddělená záložka s vlastním certifikátem a ověření znalosti bez ukládání.</p>
+            <p style="margin-top:0.6rem;"><span class="neon-green" style="font-weight:bold;">Bezpečnost.</span>
+              Hesla zůstávají jen v paměti stránky, nikdy se neukládají na disk, neposílají po síti
+              a po zavření jsou nenávratně smazána. Certifikát heslo nikdy neobsahuje.</p>
+          </div>
+        </details>
+        
+        <details class="about-block">
+          <summary><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> KREDIT</summary>
+          <div class="about-body" style="line-height:1.6;">
+            <p><span class="neon-magenta" style="font-weight:bold;">O Autorovi:</span> Luděk Sušický — SŠ a VŠ učitel Informatiky zabývající se AI ve vzdělávání a vibecodingu.</p>
+            <p class="kredit-row"><span class="opacity-50">✉ Email:</span>
+              <a class="neon-cyan" href="mailto:ludek.susicky@gmail.com" style="text-decoration:underline;">ludek.susicky@gmail.com</a>
+              <span class="text-xs dim-70" style="display:block;">(otevře poštovního klienta)</span></p>
+            <p class="kredit-row"><span class="opacity-50">𝕏 X:</span>
+              <a class="neon-cyan" href="https://x.com/ludeksusicky" target="_blank" rel="noopener">@ludeksusicky</a></p>
+            <p class="kredit-row"><span class="opacity-50">LinkedIn:</span>
+              <a class="neon-cyan" href="https://www.linkedin.com/in/ludek-susicky" target="_blank" rel="noopener">linkedin.com/in/ludek-susicky</a></p>
+            <p style="margin-top:0.8rem;">Aplikace je příkladem <span class="neon-green" style="font-weight:bold;">SPA (single-page application)</span> — vše v jediném souboru HTML, vytvořené v <span class="neon-cyan" style="font-weight:bold;">Antigravity Google Gemini 3.1 Pro</span>. Asistence: <span class="neon-orange" style="font-weight:bold;">Big Pickle</span> (AI, opencode).</p>
+            <p class="kredit-row" style="margin-top:0.8rem;">
+              <span class="opacity-50">Verze:</span> Gemini Pro 3.1 + Big Pickle<br>
+              <span class="opacity-50">Licence:</span> <span class="neon-green" style="font-weight:bold;">GPLv3 · Copyright © 2026 Luděk Sušický</span>
+            </p>
+          </div>
+        </details>
+      </section>
+    </div>
+    
+    <!-- Main -->
+    <main>
+      <div class="mode-switch">
+        <button class="mode-btn active" id="modeTransformBtn">⚡ LEET TRANSFORMACE</button>
+        <button class="mode-btn" id="modeTrainerBtn">🔐 TRENAŽÉR HESEL</button>
+      </div>
+      
+      <div id="transformView">
+      <div class="menu-hint-strip">
+        <span class="mh-icon">☰</span>
+        <span><span class="neon-cyan" style="font-weight:bold;">MOŽNOSTI TRANSFORMACE</span> (úroveň, profil,
+          přepínače, velikost písmen) najdeš v menu nahoře. Hinty „&#63;“ u ovládacích prvků vysvětlují, co slouží k čemu.</span>
+      </div>
+      <section>
+        <label class="section-label neon-cyan">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <line x1="8" y1="16" x2="16" y2="16"/>
+          </svg>
+          VSTUPNÍ TEXT
+          <span class="ctrl-hint" tabindex="0" data-tip="Sem napiš nebo vlož text, který se převede do leetspeaku (např. slovo, heslo, frázi).&nbsp;&nbsp;Znaky můžeš prohazovat — klikáš ve ZNAKOVÉ MAPĚ a každý znak vystřídáš za jinou variantu.">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          </span>
+        </label>
+        <textarea class="cyber-input" id="inputText" placeholder="Zadejte text pro transformaci..." rows="3"></textarea>
+      </section>
+      
+      <section>
+        <label class="section-label neon-magenta">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          VÝSTUP - LEET SPEAK
+          <span class="ctrl-hint" tabindex="0" data-tip="Výsledek převodu.&nbsp;&nbsp;„↺“ vrátí tvé ruční úpravy zpět, ikona kopírování výstup zkopíruje. Kliknutím do pole můžeš výstup dál upravit rukou.">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          </span>
+          <span class="edited-badge neon-orange" id="editedBadge" style="display:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0110 0v4"/>
+            </svg>
+            Editováno
+          </span>
+        </label>
+        <div style="position:relative;">
+          <textarea class="cyber-input output" id="outputText" placeholder="Transformovaný text..." rows="3"></textarea>
+          <div class="action-btns">
+            <button class="action-btn" id="resetBtn" title="Resetovat změny" style="display:none;">
+              <span class="neon-orange">↺</span>
+            </button>
+            <button class="action-btn" id="copyBtn" title="Kopírovat">
+              <svg class="neon-cyan" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+      
+      <section>
+        <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
+          <span class="text-sm opacity-70">Síla hesla
+            <span class="ctrl-hint" tabindex="0" data-tip="Odhad síly výstupu jako hesla.&nbsp;&nbsp;Čím víc znaků prohodíš (a čím je text delší), tím vyšší procento. Sílu jako heslo hodnotí přesněji TRENAŽÉR HESEL.">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            </span>
+          </span>
+          <span class="text-sm" id="strengthLabel">Prázdné (0%)</span>
+        </div>
+        <div class="strength-bar">
+          <div class="strength-fill" id="strengthFill" style="width:0%;"></div>
+        </div>
+      </section>
+      
+      <section class="cyber-card" style="padding:1rem;">
+        <h3 class="neon-magenta mb-3">ZNAKOVÁ MAPA
+          <span class="ctrl-hint" tabindex="0" data-tip="Tady znaky prohazuješ: kliknutím na znak přepneš jeho variantu (např. a → 4 → @).&nbsp;&nbsp;Každá změna se hned promítne do výstupu. Další možnosti (úroveň, profil, přepínače) najdeš v menu ☰.">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          </span>
+        </h3>
+        <p class="text-xs opacity-70 mb-3">Kliknutím přepnete variantu znaku</p>
+        <div class="char-grid" id="charGrid"></div>
+      </section>
+      
+      <section class="cyber-card" style="padding:1rem;" id="statsSection">
+        <h3 class="neon-orange mb-3">STATISTIKY
+          <span class="ctrl-hint" tabindex="0" data-tip="Souhrn transformace: původní a výstupní délka (některé náhrady jako „|3“ = „b“ text prodlouží), kolik unikátních znaků výstup používá a kolik procent tvoří leet znaky.">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          </span>
+        </h3>
+        <div class="stats-grid">
+          <div>
+            <div class="opacity-70">Původní délka</div>
+            <div class="stat-value neon-cyan" id="statOrigLen">0</div>
+          </div>
+          <div>
+            <div class="opacity-70">Výstupní délka</div>
+            <div class="stat-value neon-magenta" id="statOutLen">0</div>
+          </div>
+          <div>
+            <div class="opacity-70">Unikátní znaky</div>
+            <div class="stat-value neon-orange" id="statUnique">0</div>
+          </div>
+          <div>
+            <div class="opacity-70">Leet ratio</div>
+            <div class="stat-value" id="statRatio" style="color:#39ff14;">0%</div>
+          </div>
+        </div>
+      </section>
+      </div>
+      
+      <div id="trainerView" class="trainer-hidden">
+        <section class="trainer-banner">
+          <div class="level-title neon-cyan" id="trainerTitle">TRENAŽÉR HESEL</div>
+          <p class="text-sm dim-70" style="margin-top:0.5rem; line-height:1.6;">
+            Tři samostatné záložky. Ve <span class="neon-magenta">KVÍZU</span> 20+ otázek (některé
+            s více správnými odpověďmi) — za špatnou odpověď se ukáže vysvětlení a žák získá vlastní
+            <span class="neon-green-c">certifikát kvízu</span> (stahovatelný PNG). V
+            <span class="neon-cyan">TRENAŽÉRU HESEL</span> vytvoříš heslo podle pravidel obtížnosti
+            a dostaneš samostatný <span class="neon-green-c">certifikát</span>. V
+            <span class="neon-orange">OVĚŘENÍ ZNALOSTI</span> pak prokážeš znalost bez ukládání.
+            Heslo zůstává jen v paměti, nikde se neukládá.
+          </p>
+        </section>
+        
+        <!-- Tři samostatné záložky: kvíz / trenažér / ověření; každý má vlastní certifikát -->
+        <div class="trainer-tabs">
+          <button class="tab-btn active" id="showQuizTabBtn">🧠 KVÍZ</button>
+          <button class="tab-btn" id="showTrainerTabBtn">⚗ TRENAŽÉR HESEL</button>
+          <button class="tab-btn" id="showVerifyBtn">✔ OVĚŘENÍ ZNALOSTI</button>
+        </div>
+        
+        <!-- NÁPADY: rotující tipy + žárovka, která občas zazáří -->
+        <div class="tip-strip" id="tipStrip">
+          <span class="tip-bulb" id="tipBulb">💡</span>
+          <div class="tip-main">
+            <span class="tip-tag" id="tipTag"></span>
+            <div class="tip-text" id="tipText"></div>
+          </div>
+          <button class="tip-next" id="tipNextBtn" title="Další nápad">DALŠÍ NÁPAD →</button>
+        </div>
+        
+        <!-- KVÍZ (samostatná záložka, vlastní certifikát a PNG) -->
+        <div id="quizContent">
+          <section class="cyber-card gate-panel" id="gateIntro">
+            <h3 class="neon-cyan gate-title" id="gateIntroTitle"></h3>
+            <div class="gate-body" id="gateIntroBody"></div>
+            <div class="gate-dots" id="gateDots"></div>
+            <button class="confirm-btn" id="gateIntroNext" style="width:100%; margin-top:0.9rem;">DALŠÍ →</button>
+          </section>
+          
+          <section class="cyber-card gate-panel trainer-hidden" id="gateQuiz" style="margin-top:1rem;">
+            <div class="quiz-head">
+              <span class="neon-magenta" id="quizProgress">OTÁZKA 1/23</span>
+              <span class="quiz-tag" id="quizLevelTag">ZAPAMATOVÁNÍ</span>
+            </div>
+            <div class="quiz-q" id="quizQuestion"></div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <p class="text-xs dim-50 trainer-hidden" style="margin-top:0.5rem;" id="quizMultiHint">
+              Otázka s více správnými odpověďmi: označ VŠECHNY platné volby a potvrď tlačítkem níže.
+            </p>
+            <span class="quiz-feedback" id="quizFeedback"></span>
+            <button class="confirm-btn trainer-hidden" id="quizNextBtn" style="width:100%; margin-top:0.6rem;">DALŠÍ →</button>
+            <button class="confirm-btn trainer-hidden" id="quizSubmitMulti" style="width:100%; margin-top:0.6rem; background:rgba(0,240,255,0.15);">ODPOVĚDĚT ✓ (označené)</button>
+          </section>
+          
+          <!-- stav po dokončení: známka dle Bloom skóre + cert (1–2) / opakování (3–5) -->
+          <section class="cyber-card trainer-hidden" id="quizDoneBox" style="padding:1rem; margin-top:1rem; text-align:center;">
+            <div style="font-size:1.15rem; font-weight:bold;" id="quizDoneHeadline">✓ KVÍZ DOKONČEN</div>
+            
+            <div style="margin:0.8rem 0 0.3rem;">
+              <div class="quiz-grade-num neon-magenta" id="quizGradeNum">–</div>
+              <div class="text-sm" id="quizGradeWord">–</div>
+              <div class="text-xs dim-60" style="margin-top:0.2rem;" id="quizGradePct">–</div>
+            </div>
+            <div class="text-sm dim-70" style="line-height:1.6; margin-bottom:0.6rem; font-size:0.85rem;" id="quizBloomReport"></div>
+            
+            <!-- známka 1–2: certifikát + restart -->
+            <div id="quizCertArea">
+              <p class="text-sm dim-70" style="margin:0.3rem 0 1rem;">
+                Certifikát kvízu (i přes samostatné stažení) si můžeš otevřít a stáhnout kdykoli znovu. Známka je v něm zapsána.
+              </p>
+              <div style="display:grid; gap:10px;">
+                <button class="confirm-btn" id="quizCertBtn">🏆 ZOBRAZIT CERTIFIKÁT KVÍZU</button>
+                <button class="confirm-btn" id="quizRestartBtn" style="background:rgba(255,0,255,0.12);">SPUSTIT KVÍZ ZNOVU</button>
+              </div>
+            </div>
+            
+            <!-- známka 3–5: doporučení + opakování, certifikát se nenabízí -->
+            <div id="quizFailArea" style="display:none;">
+              <p class="text-sm" style="line-height:1.6; margin:0.4rem 0 1rem; color:#ffb3a0;">
+                Tentokrát to nevyšlo nejlépe (známka <b id="quizFailGrade">–</b>). Certifikát dostaneš až za výsledek
+                <span class="neon-green" style="font-weight:bold;">1–2</span> — projdi si prosím vysvětlení u špatných
+                odpovědí a zkus kvíz znovu. Můžeš opakovat, dokud se nevylepšíš.
+              </p>
+              <div style="display:grid; gap:10px;">
+                <button class="confirm-btn" id="quizFailRepeatBtn" style="background:rgba(255,102,0,0.15); font-size:1.05rem;">🔄 OPAKOVAT KVÍZ ZNOVU</button>
+                <button class="confirm-btn" id="quizFailTrainerBtn" style="background:rgba(0,240,255,0.12);">JÍT DO TRENAŽÉRU →</button>
+              </div>
+            </div>
+          </section>
+        </div>
+        
+        <!-- TRENAŽÉR HESEL (samostatná záložka, vlastní certifikát) -->
+        <div id="labContent" class="trainer-hidden">
+        <div id="trainerWork">
+        <section class="cyber-card" style="padding:1rem;">
+          <h3 class="neon-magenta mb-2">1 · ZVOL OBTÍŽNOST DÉLKY</h3>
+          <div class="level-cards" id="levelCards"></div>
+        </section>
+        
+        <section class="cyber-card" style="padding:1rem; margin-top:1rem;">
+          <h3 class="neon-orange mb-2">2 · POŽADAVKY</h3>
+          <ul class="rule-list" id="trainerRules"></ul>
+        </section>
+        
+        <section class="cyber-card" style="padding:1rem; margin-top:1rem;">
+          <h3 class="neon-magenta mb-2">3 · ZADEJ HESLO <span class="text-xs dim-70">(viditelné, oko = skrýt)</span></h3>
+          <label class="name-label" for="certNameInput">Jméno pro certifikát (z kvízu se doplní samo, jinak vyplň):</label>
+          <input type="text" class="cyber-input" id="certNameInput" maxlength="60" placeholder="Jméno / značka pro certifikát" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <div class="trainer-password-row" style="margin-top:0.6rem;">
+            <input type="text" class="cyber-input trainer-pw" id="trainerPassword" placeholder="Vytvoř ideální heslo – program okamžitě prozkoumá jeho kvalitu" autocomplete="off" autocapitalize="off" spellcheck="false">
+            <button class="pw-toggle" id="pwToggle" title="Skrýt zobrazení" style="color:var(--neon-cyan);" aria-label="Skrýt zobrazení hesla">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div class="trainer-metrics" id="trainerMetrics">
+            <div class="metric m-cyan">
+              <div class="m-label"><span>ENTROPIE</span><span class="m-value neon-cyan" id="metricEntropy">0 bitů</span></div>
+              <div class="m-track"><div class="m-fill" id="metricEntropyFill"></div></div>
+            </div>
+            <div class="metric m-green">
+              <div class="m-label"><span>RYCHLOST ZADÁNÍ</span><span class="m-value" id="metricTyp" style="color:#39ff14;">100 %</span></div>
+              <div class="m-track"><div class="m-fill" id="metricTypFill"></div></div>
+            </div>
+          </div>
+          <div class="trainer-weak" id="trainerWeak"></div>
+          <div class="hint-box" id="trainerHintNeeds"></div>
+          <div class="text-sm dim-70" style="margin-top:0.75rem;" id="trainerProgress"></div>
+          
+          <div class="suggest-row" id="suggestRow">
+            <span class="text-sm dim-70">Potřebuješ diagnózu a vylepšení?</span>
+            <button class="suggest-btn" id="analyzeBtn">🔍 PROZKOUMAT KVALITU</button>
+            <button class="suggest-btn" id="suggestBtn">💡 NÁPAD</button>
+          </div>
+          <div class="hint-box" id="trainerHintPersonal" style="display:none;"></div>
+          <ul class="diag-list" id="diagList"></ul>
+          
+          <div style="margin-top:1rem;">
+            <button class="confirm-btn" id="certifyBtn" style="width:100%;" disabled>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4"/>
+                <path d="M20 6v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h3"/>
+              </svg>
+              <span id="certifyLabel">⛔ PASS — PRAVIDLA NESPLNĚNA</span>
+            </button>
+          </div>
+        </section>
+        </div>
+        </div>
+        
+        <!-- OVĚŘENÍ ZNALOSTI: prokazatelná zkouška bez ukládání („příští týden“) -->
+        <section class="cyber-card trainer-hidden" id="verifyPanel" style="padding:1rem;">
+          <h3 class="neon-cyan mb-2">OVĚŘENÍ ZNALOSTI · ZKOUŠKA</h3>
+          <p class="text-sm dim-70" style="line-height:1.6; margin-bottom:1rem;">
+            Přetvoř znovu silné heslo (např. totéž jako na certifikátu). Pole je
+            <b class="neon-magenta">skryté — hvězdičky</b> — a nic se nikam neukládá.
+            Zobrazí se jen objektivní údaje; když heslo projde pravidly i hranicí entropie,
+            dostane razítko <span class="neon-green">OVĚŘENO</span> k zápisu učiteli.
+          </p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:0.8rem;">
+            <div>
+              <label class="text-xs opacity-70">Obtížnost</label>
+              <select class="cyber-input" id="verifyLevelSelect"></select>
+            </div>
+            <div class="text-sm dim-70" style="align-self:end; padding-bottom:0.45rem;">
+              <span class="opacity-50">Požadavek entropie:</span>
+              <span class="neon-cyan" id="verifyTarget">–</span>
+            </div>
+          </div>
+          <div class="trainer-password-row">
+            <input type="password" class="cyber-input trainer-pw" id="verifyPassword" placeholder="Zadej heslo znovu — skryté (hvězdičky)…" autocomplete="off" autocapitalize="off" spellcheck="false">
+            <button class="pw-toggle" id="verifyPwToggle" title="Zobrazit heslo" style="color:var(--neon-magenta);" aria-label="Zobrazit heslo">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <ul class="rule-list" id="verifyRules" style="margin-top:0.8rem;"></ul>
+          <div class="trainer-metrics" id="verifyMetrics">
+            <div class="metric m-cyan">
+              <div class="m-label"><span>ENTROPIE</span><span class="m-value neon-cyan" id="verifyEntropy">–</span></div>
+              <div class="m-track"><div class="m-fill" id="verifyEntropyFill"></div></div>
+            </div>
+            <div class="metric m-orange">
+              <div class="m-label"><span>TŘÍDY ZNAKŮ</span><span class="m-value neon-orange" id="verifyClasses">–</span></div>
+              <div class="m-track"><div class="m-fill" id="verifyClassesFill"></div></div>
+            </div>
+          </div>
+          <div class="verify-stamp trainer-hidden" id="verifyStamp">
+            ✓ OVĚŘENO · <span id="verifyStampWhen"></span>
+            <div class="vs-sub" id="verifyStampSub"></div>
+          </div>
+          <p class="text-xs dim-50" style="margin-top:0.9rem;">
+            Prokazatelná zkouška bez ukládání: žák z reprodukovaného hesla předvede, že splní
+            pravidla obtížnosti a dosáhne požadované entropie. Heslo se nikde nezaznamenává.
+          </p>
+        </section>
+      </div>
+    
+    <!-- Certificate Modal -->
+    <div class="modal-overlay" id="certModal">
+      <div class="modal certificate" style="max-width:460px;">
+        <div class="cert-corner tl"></div>
+        <div class="cert-corner br"></div>
+        <button class="dots-btn" id="certCloseBtn" title="Zavřít" style="position:absolute; top:8px; right:8px;">
+          <svg class="neon-cyan" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+        <div class="cert-title" id="certTitle">CERTIFIKÁT</div>
+        <div class="text-sm dim-70" style="margin-top:0.4rem;" id="certSubtitle">úspěšné splnění trenažéru hesel</div>
+        <div class="cert-seq"></div>
+        <div id="certBody"></div>
+        <div class="cert-palette" id="certPalette"></div>
+        <div class="certify-row" id="certCopyRow">
+          <button class="confirm-btn" id="certCopyBtn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2"/>
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            ZKOPÍROVAT HESLO
+          </button>
+        </div>
+        <div class="certify-row trainer-hidden" id="certNextRow">
+          <button class="confirm-btn" id="certNextBtn">POKRAČOVAT DO TRENAŽÉRU →</button>
+        </div>
+        <div class="certify-row">
+          <button class="confirm-btn" id="certPngBtn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/>
+            </svg>
+            STÁHNOUT CERTIFIKÁT (PNG)
+          </button>
+        </div>
+        <p class="text-xs dim-50" style="margin-top:1rem;">Heslo se nikde neukládá a po zavření okna bude nenávratně smazáno. Certifikát heslo nikdy neobsahuje.</p>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <span class="opacity-50">Cyber Passmake v1.0</span>
+        <span class="neon-magenta">MIT © 2026</span>
+      </div>
+    </footer>
+    
+  </div>
+  
+  <script>
+    // JSON Data
+    const leetData = {"en":{"a":["4","@","∆","/-\\","λ"],"b":["8","ß","|3","13"],"c":["(","¢","<","{"],"d":["|)","|","[)","∂"],"e":["3","€","ε","£"],"f":["|","ph","ƒ"],"g":["6","9","&"],"h":["#","/-/","|-|","]-["],"i":["1","!","|","¡"],"j":["_|","_/","]̲"],"k":["|<","|{","|("],"l":["1","|","£"],"m":["|v|","|\\/|","^^","nn"],"n":["|\\ |","/\\/","И"],"o":["0","()","[]","°"],"p":["|*","|>","|7"],"q":["0_","9","(,)"],"r":["|2","®","Я"],"s":["5","$","§","z"],"t":["7","+","†"],"u":["|_|","µ","(_)"],"v":["\\/","√"],"w":["\\/\\/","vv","ω"],"x":["><","×","}{"],"y":["`/","¥","Ψ"],"z":["2","7_",">_"]},"cs":{"á":["4","@","∆"],"č":["(","<","¢"],"ď":["|)","|"],"é":["3","€","ε"],"ě":["3","€"],"í":["1","!","|"],"ň":["|\\ |","/\\/"],"ó":["0","()"],"ř":["|2","®"],"š":["5","$"],"ť":["7","+"],"ú":["|_|","µ"],"ů":["|_|","µ"],"ý":["`/","¥"],"ž":["2","7_"]},"encoding_levels":{"basic":{"description":"Základní substituce","chars":["a","e","i","o","s","t"]},"intermediate":{"description":"Střední úroveň","chars":["a","b","c","e","g","h","i","l","o","s","t","z"]},"advanced":{"description":"Pokročilá úroveň","chars":["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","r","s","t","u","v","w","x","y","z"]},"extreme":{"description":"Extrémní úroveň","chars":["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]}},"profiles":{"simple":{"description":"Jednoduchý","variant_index":0},"classic":{"description":"Klasický","variant_index":1},"hacker":{"description":"Hackerský","variant_index":2},"random":{"description":"Náhodný","variant_index":-1}},"normalization":{"rules":{"á":"a","č":"c","ď":"d","é":"e","ě":"e","í":"i","ň":"n","ó":"o","ř":"r","š":"s","ť":"t","ú":"u","ů":"u","ý":"y","ž":"z"}},"gaming_vocab":{"terms":{"noob":"n00b","leet":"1337","elite":"31337","hacker":"h4x0r","pwned":"pwn3d","owned":"0wn3d","kill":"k1ll","win":"w1n","lose":"l0z3","game":"g4m3","player":"pl4y3r","skill":"sk1ll","pro":"pr0","gg":"g00d g4m3","cool":"k3wl","dude":"d00d","the":"teh","you":"j00","are":"r","rock":"r0xx0rz"}},"double_word_patterns":{"patterns":{"oo":"00","ee":"33","aa":"44","ii":"11","ss":"$$","ll":"11","tt":"77"}},"keyboard_shift":{"map":{"q":"w","w":"e","e":"r","r":"t","t":"y","a":"s","s":"d","d":"f","f":"g","z":"x","x":"c","c":"v"}},"hexspeak":{"words":["DEADBEEF","CAFEBABE","FEEDFACE","C0FFEE","FACADE","BEEF"]},"suffixes":{"options":{"xor":"x0r","zor":"z0r","age":"4g3","er":"0r","ing":"1ng"}}};
+    
+    // Nápad: diferenciace úrovní a zpřístupnění českých znaků
+    leetData.encoding_levels.advanced.chars = ['a','b','c','d','e','g','h','i','l','m','n','o','p','r','s','t','u','z'];
+    leetData.encoding_levels.extreme.chars = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+    // Každá úroveň dostane i odpovídající české znaky (aby fungovaly bez normalizace)
+    Object.values(leetData.encoding_levels).forEach(lv => {
+      Object.entries(leetData.normalization.rules).forEach(([cjk, latin]) => {
+        if (lv.chars.includes(latin) && !lv.chars.includes(cjk)) lv.chars.push(cjk);
+      });
+    });
+
+    const spaceVariants = ['_', '-', '=', '~', '.', '*', '+', '•'];
+    
+    function strHash(s) {
+      let h = 5381;
+      for (let i = 0; i < s.length; i++) {
+        h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+      }
+      return h;
+    }
+    function pseudoRand(seed) {
+      return (((seed >>> 0) * 9301 + 49297) % 233280) / 233280;
+    }
+    
+    // State
+    let charOverrides = {};
+    let settings = {
+      normalization: true,
+      gaming_vocab: false,
+      selective_replacement: false,
+      rotation_mode: false,
+      double_word_patterns: false,
+      keyboard_shift: false,
+      hexspeak: false,
+      suffixes: false,
+      case_preserve: true,
+      case_uppercase: false,
+      case_lowercase: false,
+      case_random: false
+    };
+    let encodingLevel = 'basic';
+    let profile = 'simple';
+    let userEditedOutput = false;
+    let lockedChars = {};
+    let lastTransform = '';
+    
+    // DOM elements
+    const inputText = document.getElementById('inputText');
+    const outputText = document.getElementById('outputText');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const copyBtn = document.getElementById('copyBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const editedBadge = document.getElementById('editedBadge');
+    const levelSelect = document.getElementById('levelSelect');
+    const profileSelect = document.getElementById('profileSelect');
+    const togglesContainer = document.getElementById('togglesContainer');
+    const caseGrid = document.getElementById('caseGrid');
+    const charGrid = document.getElementById('charGrid');
+    const strengthLabel = document.getElementById('strengthLabel');
+    const strengthFill = document.getElementById('strengthFill');
+    
+    // Init selects
+    Object.keys(leetData.encoding_levels).forEach(key => {
+      const opt = document.createElement('option');
+      opt.value = key; opt.textContent = key;
+      levelSelect.appendChild(opt);
+    });
+    Object.keys(leetData.profiles).forEach(key => {
+      const opt = document.createElement('option');
+      opt.value = key; opt.textContent = key;
+      profileSelect.appendChild(opt);
+    });
+    
+    // Init toggles
+    const toggles = [
+      { key: 'normalization', label: 'Normalizace (ČJ→EN)' },
+      { key: 'gaming_vocab', label: 'Gaming slovník' },
+      { key: 'selective_replacement', label: 'Selektivní náhrada' },
+      { key: 'rotation_mode', label: 'Rotační mód' },
+      { key: 'double_word_patterns', label: 'Dvojité vzory (oo→00)' },
+      { key: 'keyboard_shift', label: 'Keyboard shift' },
+      { key: 'hexspeak', label: 'Hexspeak přípony' },
+      { key: 'suffixes', label: 'Leet přípony' }
+    ];
+    toggles.forEach(({ key, label }) => {
+      const row = document.createElement('div');
+      row.className = 'toggle-row';
+      row.innerHTML = `<span class="text-sm">${label}</span><div class="cyber-toggle ${settings[key] ? 'active' : ''}" data-key="${key}"></div>`;
+      togglesContainer.appendChild(row);
+    });
+    
+    // Init case buttons
+    const cases = [
+      { key: 'case_preserve', label: 'Zachovat' },
+      { key: 'case_uppercase', label: 'VELKÁ' },
+      { key: 'case_lowercase', label: 'malá' },
+      { key: 'case_random', label: 'nÁhOdNá' }
+    ];
+    cases.forEach(({ key, label }) => {
+      const btn = document.createElement('button');
+      btn.className = `case-btn ${settings[key] ? 'active' : ''}`;
+      btn.textContent = label;
+      btn.dataset.key = key;
+      caseGrid.appendChild(btn);
+    });
+    
+    // Init char grid
+    function initCharGrid() {
+      charGrid.innerHTML = '';
+      const allChars = new Set([...Object.keys(leetData.en), ...Object.keys(leetData.cs), ' ']);
+      Array.from(allChars).sort().forEach(char => {
+        const btn = document.createElement('button');
+        btn.className = `char-btn ${char === ' ' ? 'space' : ''} ${charOverrides[char] !== undefined ? 'selected' : ''}`;
+        const display = getCharDisplay(char);
+        btn.innerHTML = `<span class="orig">${char === ' ' ? 'SPC' : char}</span><span>${display}</span>`;
+        btn.onclick = () => cycleChar(char);
+        charGrid.appendChild(btn);
+      });
+    }
+    
+    function getCharDisplay(char) {
+      if (char === ' ') {
+        return spaceVariants[(charOverrides[' '] || 0) % spaceVariants.length];
+      }
+      const allMaps = { ...leetData.en, ...leetData.cs };
+      const variants = allMaps[char];
+      if (!variants || variants.length === 0) return char;
+      const idx = charOverrides[char] || 0;
+      return variants[Math.min(idx, variants.length - 1)];
+    }
+    
+    function cycleChar(char) {
+      if (char === ' ') {
+        charOverrides[' '] = ((charOverrides[' '] || 0) + 1) % spaceVariants.length;
+      } else {
+        const allMaps = { ...leetData.en, ...leetData.cs };
+        const variants = allMaps[char];
+        if (!variants) return;
+        charOverrides[char] = ((charOverrides[char] || 0) + 1) % variants.length;
+      }
+      initCharGrid();
+      transform();
+    }
+    
+    // Transform
+    function transform() {
+      const text = inputText.value;
+      if (!text) {
+        outputText.value = '';
+        updateStats();
+        return;
+      }
+      
+      let result = text;
+      const levelChars = leetData.encoding_levels[encodingLevel]?.chars || [];
+      const variantIndex = leetData.profiles[profile]?.variant_index || 0;
+      
+      // Gaming vocab
+      if (settings.gaming_vocab) {
+        Object.entries(leetData.gaming_vocab.terms).forEach(([term, repl]) => {
+          result = result.replace(new RegExp(term, 'gi'), repl);
+        });
+      }
+      
+      // Double patterns
+      if (settings.double_word_patterns) {
+        Object.entries(leetData.double_word_patterns.patterns).forEach(([p, r]) => {
+          result = result.replace(new RegExp(p, 'gi'), r);
+        });
+      }
+      
+      // Keyboard shift
+      if (settings.keyboard_shift) {
+        const map = leetData.keyboard_shift.map;
+        result = result.split('').map(c => {
+          const lower = c.toLowerCase();
+          return map[lower] ? (c === c.toUpperCase() ? map[lower].toUpperCase() : map[lower]) : c;
+        }).join('');
+      }
+      
+      // Leet transform
+      const allMaps = { ...leetData.en, ...leetData.cs };
+      result = result.split('').map((char, idx) => {
+        if (lockedChars[idx] !== undefined) return lockedChars[idx];
+        
+        if (char === ' ') {
+          const spaceIdx = charOverrides[' '] || 0;
+          return spaceVariants[spaceIdx % spaceVariants.length];
+        }
+        
+        let baseChar = char.toLowerCase();
+        let keyChar = baseChar;
+        if (settings.normalization && leetData.normalization.rules[baseChar]) {
+          keyChar = leetData.normalization.rules[baseChar];
+        }
+        
+        if (!levelChars.includes(keyChar)) return char;
+        
+        const variants = allMaps[keyChar];
+        if (!variants || variants.length === 0) return char;
+        
+        const rSeed = strHash(result.slice(0, idx) + char + idx);
+        if (settings.selective_replacement && pseudoRand(rSeed) > 0.7) return char;
+        
+        let vIdx = variantIndex;
+        if (charOverrides[keyChar] !== undefined) vIdx = charOverrides[keyChar];
+        if (vIdx === -1 || settings.rotation_mode) vIdx = Math.floor(pseudoRand(rSeed + 1) * variants.length);
+        vIdx = Math.max(0, Math.min(vIdx, variants.length - 1));
+        
+        return variants[vIdx];
+      }).join('');
+      
+      // Case
+      if (settings.case_uppercase) result = result.toUpperCase();
+      else if (settings.case_lowercase) result = result.toLowerCase();
+      else if (settings.case_random) {
+        const textHash = strHash(text);
+        result = result.split('').map((c, i) => pseudoRand(textHash + i) > 0.5 ? c.toUpperCase() : c.toLowerCase()).join('');
+      }
+      
+      // Hexspeak
+      if (settings.hexspeak && result.length > 0 && pseudoRand(strHash(text) + 100) > 0.7) {
+        const words = leetData.hexspeak.words;
+        result += '_' + words[Math.floor(pseudoRand(strHash(text) + 200) * words.length)];
+      }
+      
+      // Suffixes
+      if (settings.suffixes) {
+        const opts = Object.values(leetData.suffixes.options);
+        if (opts.length > 0) result += opts[Math.floor(pseudoRand(strHash(text) + 300) * opts.length)];
+      }
+      
+      lastTransform = result;
+      outputText.value = result;
+      updateStats();
+    }
+    
+    function updateStats() {
+      const inp = inputText.value;
+      const out = outputText.value;
+      
+      document.getElementById('statOrigLen').textContent = inp.length;
+      document.getElementById('statOutLen').textContent = out.length;
+      document.getElementById('statUnique').textContent = new Set(out).size;
+      
+      const leetChars = (out.match(/[^a-zA-Z\s]/g) || []).length;
+      const ratio = out.length > 0 ? Math.round((leetChars / out.length) * 100) : 0;
+      document.getElementById('statRatio').textContent = ratio + '%';
+      
+      // Strength
+      let score = 0;
+      score += Math.min(out.length * 2, 30);
+      if (/[a-z]/.test(out)) score += 5;
+      if (/[A-Z]/.test(out)) score += 5;
+      if (/[0-9]/.test(out)) score += 10;
+      if (/[^a-zA-Z0-9]/.test(out)) score += 10;
+      score += Math.min(new Set(out).size, 10);
+      score += Math.round((leetChars / Math.max(out.length, 1)) * 30);
+      score = Math.min(score, 100);
+      
+      let label = 'Slabé', color = '#ff3333';
+      if (score >= 80) { label = 'Excelentní'; color = '#39ff14'; }
+      else if (score >= 60) { label = 'Silné'; color = '#00f0ff'; }
+      else if (score >= 40) { label = 'Střední'; color = '#ff6600'; }
+      else if (score >= 20) { label = 'Slabé'; color = '#ff00ff'; }
+      else if (score === 0) { label = 'Prázdné'; color = '#333'; }
+      
+      strengthLabel.textContent = `${label} (${score}%)`;
+      strengthLabel.style.color = color;
+      strengthFill.style.width = score + '%';
+      strengthFill.style.background = `linear-gradient(90deg, ${color}, ${color}aa)`;
+    }
+    
+    // Event listeners
+    inputText.addEventListener('input', () => {
+      lockedChars = {};
+      userEditedOutput = false;
+      editedBadge.style.display = 'none';
+      resetBtn.style.display = 'none';
+      transform();
+    });
+    
+    outputText.addEventListener('input', () => {
+      userEditedOutput = true;
+      editedBadge.style.display = 'flex';
+      resetBtn.style.display = 'block';
+      
+      const newVal = outputText.value;
+      for (let i = 0; i < Math.min(newVal.length, lastTransform.length); i++) {
+        if (newVal[i] !== lastTransform[i]) lockedChars[i] = newVal[i];
+      }
+      for (let i = lastTransform.length; i < newVal.length; i++) {
+        lockedChars[i] = newVal[i];
+      }
+      updateStats();
+    });
+    
+    resetBtn.addEventListener('click', () => {
+      lockedChars = {};
+      userEditedOutput = false;
+      editedBadge.style.display = 'none';
+      resetBtn.style.display = 'none';
+      transform();
+    });
+    
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(outputText.value);
+        copyBtn.innerHTML = '<svg class="neon-cyan" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>';
+        setTimeout(() => {
+          copyBtn.innerHTML = '<svg class="neon-cyan" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+        }, 2000);
+      } catch(e) { console.error(e); }
+    });
+    
+    hamburgerBtn.addEventListener('click', () => {
+      hamburgerBtn.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    
+    levelSelect.addEventListener('change', (e) => { encodingLevel = e.target.value; transform(); });
+    profileSelect.addEventListener('change', (e) => { profile = e.target.value; transform(); });
+    
+    togglesContainer.addEventListener('click', (e) => {
+      const toggle = e.target.closest('.cyber-toggle');
+      if (toggle) {
+        const key = toggle.dataset.key;
+        settings[key] = !settings[key];
+        toggle.classList.toggle('active');
+        transform();
+      }
+    });
+    
+    caseGrid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.case-btn');
+      if (btn) {
+        const key = btn.dataset.key;
+        settings.case_preserve = key === 'case_preserve';
+        settings.case_uppercase = key === 'case_uppercase';
+        settings.case_lowercase = key === 'case_lowercase';
+        settings.case_random = key === 'case_random';
+        document.querySelectorAll('.case-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        transform();
+      }
+    });
+    
+    // Swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0]?.clientX || 0; });
+    document.addEventListener('touchend', (e) => {
+      const diff = touchStartX - (e.changedTouches[0]?.clientX || 0);
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) { hamburgerBtn.classList.remove('open'); mobileMenu.classList.remove('open'); }
+        else { hamburgerBtn.classList.add('open'); mobileMenu.classList.add('open'); }
+      }
+    });
+    
+    // Init
+    initCharGrid();
+    
+    // ============ MODE SWITCH & INFO ============
+    const transformView = document.getElementById('transformView');
+    const trainerView = document.getElementById('trainerView');
+    const modeTransformBtn = document.getElementById('modeTransformBtn');
+    const modeTrainerBtn = document.getElementById('modeTrainerBtn');
+    
+    function setMode(t) {
+      const trans = t === 'transform';
+      transformView.classList.toggle('trainer-hidden', !trans);
+      trainerView.classList.toggle('trainer-hidden', trans);
+      modeTransformBtn.classList.toggle('active', trans);
+      modeTrainerBtn.classList.toggle('active', !trans);
+      // záložky kvízu zůstávají nezávislé na tréninku; úvodní panel vykreslíme při vstupu
+      if (t === 'trainer') {
+        renderIntroPanel();
+        applyQuizView();
+      }
+    }
+    modeTransformBtn.addEventListener('click', () => setMode('transform'));
+    modeTrainerBtn.addEventListener('click', () => setMode('trainer'));
+    
+    // ============ KVÍZ (samostatná záložka, vlastní certifikát) ============
+    const gateIntro = document.getElementById('gateIntro');
+    const gateIntroTitle = document.getElementById('gateIntroTitle');
+    const gateIntroBody = document.getElementById('gateIntroBody');
+    const gateDots = document.getElementById('gateDots');
+    const gateIntroNext = document.getElementById('gateIntroNext');
+    const gateQuiz = document.getElementById('gateQuiz');
+    const quizDoneBox = document.getElementById('quizDoneBox');
+    
+    const INTRO_PANELS = [
+      { t: 'NEJDŘÍV SE PŘEDSTAV — KVÍZ BEZ JMÉNA NESPUSTÍŠ',
+        html: '<p>Jméno použijeme v <b class="neon-green">certifikátu kvízu i trenažéru</b> a do názvu staženého obrázku (formát <span class="neon-cyan">passmake_kviz_jméno_datum</span> / <span class="neon-cyan">passmake_trenažer_jméno_datum</span>). Bez vyplněného jména se kvíz neotevře.</p>'
+          + '<label class="name-label" for="quizNameInput">Tvoje jméno (jak ho chceš vidět na certifikátu):</label>'
+          + '<input type="text" class="cyber-input" id="quizNameInput" maxlength="60" placeholder="Napiš své jméno nebo značku" autocomplete="off" autocapitalize="off" spellcheck="false">'
+          + '<p class="text-xs neon-orange trainer-hidden" id="quizNameError" style="margin-top:0.5rem;">⚠ Nejdřív napiš své jméno — bez něj kvíz nepokračuje.</p>' },
+      { t: 'SÍLA HESLA = DÉLKA + TŘÍDY', html: '<p>Heslo je bezpečné, když je <b class="neon-cyan">dlouhé</b> a používá víc <b class="neon-magenta">druhů znaků</b> (malá, velká, číslice, symboly). Každý znak navíc znásobí počet možných kombinací — útočník jich pak musí vyzkoušet nereálně mnoho.</p>' },
+      { t: 'VZORY JSOU SLABINY', html: '<p>Crackery nezkouší znaky od AAAAA. Dnešní nástroje rozkládají heslo na <b class="neon-orange">vzory</b>: běžná slova ze slovníků (čeština i angličtina), častá hesla, chůzi po klávesnici (qwerty), sekvence (123), opakování (aaaaa) a data. Proto „kočka“ neochrání nic.</p>' },
+      { t: 'LEETS PEAK SÁM NEZACHRÁNÍ', html: '<p>Leetspeak (<b class="neon-magenta">a→4, e→3, o→0</b>) jen změní vzhled hesla a pomůže si ho zapamatovat. Každý cracker zná leet tabulku — <b class="neon-orange">sám bezpečnost téměř nezvyšuje</b>. Opravdová síla je v délce a nepředvídatelném složení.</p>' },
+      { t: 'OVĚŘUJEME JAKO zxcvbn', html: '<p>Trenažér používá <b class="neon-cyan">mechaniku knihovny zxcvbn</b> (Dropbox): heslo rozloží na vzory, pozná leet, klávesnici, sekvence i data a spočítá <b class="neon-green">efektivní entropii</b>. Vše běží lokálně — heslo se nikam nezaznamenává a po zavření je smazáno.</p>' },
+      { t: 'CO TĚ ČEKÁ', html: '<p>Záložka <b class="neon-cyan">KVÍZ</b>: 20+ otázek (Bloomova taxonomie) — i s <b class="neon-magenta">více správnými odpověďmi</b>. Za špatnou odpověď se zobrazí <b class="neon-orange">vysvětlení, proč</b>, a otázka se vrátí, dokud ji nezodpovíš správně (100 %). Za splnění: <b class="neon-green">certifikát kvízu</b> (PNG k stažení). Záložka <b class="neon-cyan">TRENAŽÉR HESEL</b> = samostatný certifikát z pravidel, <b class="neon-orange">OVĚŘENÍ ZNALOSTI</b> = prokazatelná zkouška bez ukládání.</p>' }
+    ];
+    let introIdx = 0;
+    let quizState = 'intro';   // 'intro' | 'quiz' | 'done'
+    let studentName = '';
+    function updateStudentName() {
+      const ni = document.getElementById('quizNameInput');
+      const cn = document.getElementById('certNameInput');
+      const src = (ni && ni.value.trim()) ? ni.value.trim() : (cn && cn.value.trim()) ? cn.value.trim() : studentName;
+      studentName = src;
+      const er = document.getElementById('quizNameError');
+      if (er && studentName) er.classList.add('trainer-hidden');
+      return studentName;
+    }
+    function studentNameOk() {
+      return updateStudentName().length > 0;
+    }
+    
+    function renderIntroPanel() {
+      const p = INTRO_PANELS[introIdx];
+      gateIntroTitle.textContent = (introIdx + 1) + ' · ' + p.t;
+      gateIntroBody.innerHTML = p.html;
+      gateDots.innerHTML = INTRO_PANELS.map((_, i) =>
+        '<div class="gate-dot' + (i === introIdx ? ' on' : '') + '"></div>').join('');
+      gateIntroNext.textContent = introIdx === INTRO_PANELS.length - 1 ? 'POKRAČUJ DO KVÍZU →' : 'DALŠÍ →';
+      const ni = gateIntroBody.querySelector('#quizNameInput');
+      if (ni) {
+        ni.value = studentName;
+        ni.addEventListener('input', updateStudentName);
+        ni.focus();
+      }
+    }
+    gateIntroNext.addEventListener('click', () => {
+      const ni = document.getElementById('quizNameInput');
+      if (ni && !studentNameOk()) {
+        const er = document.getElementById('quizNameError');
+        if (er) er.classList.remove('trainer-hidden');
+        ni.focus();
+        ni.style.outline = '2px solid var(--neon-orange)';
+        return;
+      }
+      if (introIdx < INTRO_PANELS.length - 1) {
+        introIdx++;
+        renderIntroPanel();
+      } else {
+        startQuiz();
+      }
+    });
+    
+    // KVÍZ — nové otázky (klíčenka/úložiště), včetně otázek s více správnými odpověďmi.
+    // Bezpečnost: v zdroji NENÍ, která volba je správná. Správné odpovědi
+    // jsou uloženy jako hash h (se solí s) — poznat je nelze, dokud kvíz neoběhne.
+    const QUIZ_BANK = [
+      { level: 'ZAPAMATOVÁNÍ', q: 'Co je to leetspeak (l33t)?',
+        options: ['slovo, kterým se povinně zakončuje každé heslo', 'šifra s tajným klíčem, kterou si strany předem vymění', 'záměrné přepisování písmen na podobné znaky (a→4, e→3) a obráceně', 'algoritmus na kompresi videa do malých souborů'],
+        h: 488975847, s: '', explain: 'Leetspeak je „převlek“ znaků (a→4, e→3, o→0). Tabulku má každý cracker, proto sám bezpečnost téměř nezvyšuje.' },
+      { level: 'ZAPAMATOVÁNÍ', q: 'Který zápis je typicky leet pro písmeno „a“?',
+        options: ['9', '8', '4', '5'],
+        h: 177625, s: '', explain: 'Běžná leet mapa: a→4, e→3, o→0, s→5, t→7.' },
+      { level: 'ZAPAMATOVÁNÍ', q: 'Co je to „třída znaků“?',
+        options: ['část slovníku trenažéru', 'počet písmen v hesle', 'skupina znaků stejného druhu (malá / velká / číslice / symbol)', 'nastavení velikosti písma'],
+        h: 1428679899, s: '', explain: 'Počet tříd = kolik druhů znaků heslo kombinuje (např. 3 třídy: malá + velká + číslice).' },
+      { level: 'POROZUMĚNÍ', q: 'Proč je „kocour“ slabé heslo, i když je krátké a „sedí na jazyk“?',
+        options: ['neumí si je trenažér zapamatovat', 'má moc tříd znaků', 'je to slovo ze slovníku — cracker ho zkusí rovnou jako celek', 'je moc dlouhé na zadání'],
+        h: 1815712634, s: '', explain: 'Slovníkové slovo se nehádá znak po znaku, ale vyzkouší se předem jako celek — proto okamžitě končí.' },
+      { level: 'POROZUMĚNÍ', multi: true, q: 'Ve kterých úložištích je bezpečné držet hesla? (vyber všechny správné)',
+        options: ['textový soubor „pověření.txt“ na ploše', 'správce hesel v prohlížeči (Google Password Manager — Hesla Google)', 'klíčenka operačního systému (Windows Credential Manager, macOS Klíčenka)', 'aplikace správce hesel (Bitwarden, KeePass) chráněná hlavním heslem'],
+        h: [4128578954, 2465221989, 3947788980], s: '', explain: 'Klíčenky a správci hesel uložená hesla šifrují a umí je i vygenerovat. Textový soubor na ploše si může přečíst kdokoli — to bezpečné úložiště není.' },
+      { level: 'POROZUMĚNÍ', q: 'Proč leetspeak sám o sobě skoro nezvyšuje bezpečnost?',
+        options: ['leetspeak hesla se nesmí ukládat', 'znaky v leet nejdou napsat na klávesnici', 'crackery mají stejné leet tabulky a „převlek“ rychle rozkryjí', 'leet funguje jen na velkých písmenech'],
+        h: 2915073659, s: '', explain: 'Najít společnou leet mapu je snadné — přidaná síla je jen pár bitů proti tomu, co slibuje délka.' },
+      { level: 'POROZUMĚNÍ', multi: true, q: 'Google nabídne uložit heslo do Hesel Google. Které chování je správné? (vyber všechny)',
+        options: ['neukládat, ale napsat heslo na papír nalepený k monitoru', 'uložit a heslo si pro jistotu poslat e-mailem', 'uložit a k účtu mít zapnuté dvoufázové ověření', 'uložit tak, aby bylo šifrované přes hlavní heslo účtu'],
+        h: [3394894091, 2792241151], s: '', explain: 'Správce hesel v prohlížeči je běžně bezpečný hlavně s dvoufázovým ověřením. E-mail a papír u monitoru heslo prozradí.' },
+      { level: 'POROZUMĚNÍ', q: 'Co znamená „efektivní entropie“ v trenažéru?',
+        options: ['barva, kterou použije certifikát', 'počet znaků hesla vynásobený dvěma', 'reálný odhad síly hesla po rozkladu na vzory (slova, leet, data)', 'rychlost psaní hesla na klávesnici'],
+        h: 2200902044, s: '', explain: 'Síla se počítá tak, jak ji vidí útočník — včetně slovníků, leetu a vzorců, ne podle délky znaků.' },
+      { level: 'APLIKACE', q: 'Chceš posílit heslo „kokrhanka“. Který krok udělá největší rozdíl?',
+        options: ['přidej za slovo znak !', 'přepiš a→4', 'prodluž podle paměťové věty a přidej dvě třídy znaků', 'vyměň první písmeno za velké'],
+        h: 1164002828, s: '', explain: 'Délka a třídy znaků dávají nejvíc bitů; přepis jednoho znaku je klidně jen pár bitů.' },
+      { level: 'APLIKACE', multi: true, q: 'Banka vyžaduje alespoň 3 třídy znaků. Která hesla splňují alespoň 3 třídy? (vyber všechny)',
+        options: ['1111111111 (jen číslice)', 'kocoursedcpy (jen malá)', 'Kocour2026 (velká + malá + číslice)', 'Koc0ur–2026! (velká + malá + číslice + symbol)'],
+        h: [1400355841, 1528298679], s: '', explain: '3 třídy = velká + malá + číslice (a 4. třída je symbol). Heslo z jednoho druhu znaků neprojde, i kdyby bylo delší.' },
+      { level: 'APLIKACE', q: 'Trenažér nabídl „vylepši leetem“ u hesla kocour. Který výstup je leetspeak?',
+        options: ['kcooru', 'kocour123', 'k0c0ur', 'Kocour'],
+        h: 85114234, s: '', explain: 'o→0, takže kocour → k0c0ur. Změna je spíš vizuální, sílu hesla skoro nepřidá.' },
+      { level: 'APLIKACE', q: 'Kde je v počítači NEJvhodnější držet hesla do bankovního účtu?',
+        options: ['na papíru zalepeném pod klávesnicí', 'v textovém dokumentu zabaleném do bezheslového ZIP', 'v klíčence heslel operačního systému (Credential Manager / Klíčenka)', 'v názvu souboru, který „nikoho nenapadne“ hledat'],
+        h: 3538434430, s: '', explain: 'Klíčenka systému tajemství šifruje a otevře ho jen ověřené aplikaci. ZIP bez hesla, důmyslné názvy a papír šifrování nenahradí.' },
+      { level: 'ANALÝZA', q: 'Které heslo je dlouhé, ale přesto slabé kvůli vzoru?',
+        options: ['Tajenka2026.Orel', 'Mz4!Ban@nVeRk', 'a1a1a1a1a1a1a1a1a1', 'SkodaFabia.Zelen4!'],
+        h: 1134864519, s: '', explain: 'Opakování vzoru a1 je předvídatelné — efektivní entropie je nízká, i když je heslo dlouhé.' },
+      { level: 'ANALÝZA', q: 'Ve kterém heslu je vzor „procházka po klávesnici“?',
+        options: ['Zakazkoody', 'Ostrava2026', 'qwertyui', 'MilaHana89'],
+        h: 2164137519, s: '', explain: 'qwerty jsou sousedící klávesy — takový vzor (keyboard-walk) cracker zkouší automaticky.' },
+      { level: 'ANALÝZA', q: 'Proč je „P@ssw0rd“ známé, ale slabé heslo?',
+        options: ['používá diakritiku', 'neobsahuje velké písmeno', 'je to slovníková fráze s běžnou leet mapou — má ji cracker v seznamu', 'nemá žádnou číslici'],
+        h: 3263557332, s: '', explain: 'Záměna a→@ a o→0 je nasbíraná v seznamech slabých hesel — tahle „maskovaná“ hesla jsou dávno probraná.' },
+      { level: 'ANALÝZA', q: 'Proč bys nedával(a) do hesla vlastní jména a data?',
+        options: ['jsou moc dlouhé pro pole trenažéru', 'zkracují heslo pod požadovanou délku', 'tyto údaje jsou veřejné a crackery je zkoušejí mezi prvními', 'znemožňují použít leetspeak'],
+        h: 4026373286, s: '', explain: 'Osobní údaje najde útočník na sociálních sítích — patří do slovníku, ne do hesla.' },
+      { level: 'HODNOCENÍ', q: 'Vyhodnoť heslo „MilujuNakupy2026“. Jaká je jeho největší slabina?',
+        options: ['je moc dlouhé pro zapamatování', 'má až moc tříd znaků', 'obsahuje běžná slova — útočník je zkusí jako celek', 'datum 2026 se v heslech nepoužívá'],
+        h: 1912919707, s: '', explain: 'Spojení běžných slov + rok je typický slovník, který se testuje dřív než jednotlivá hesla.' },
+      { level: 'HODNOCENÍ', q: 'Srovnej (A) Kocour4!klub a (B) aaaaaaaaaaaaaa. Které tvrzení platí?',
+        options: ['A nemá dost tříd znaků', 'A je slabší než B', 'B je slabé i přes délku — opakování je vzor, ne síla', 'B je bezpečnější díky délce'],
+        h: 3642365392, s: '', explain: 'Opakování se rozpozná okamžitě; A kombinuje délku, třídy a málo předvídatelnosti.' },
+      { level: 'HODNOCENÍ', q: 'Heslo má 25 znaků, ale jen malá písmena (1 třída). Je bezpečné?',
+        options: ['záleží jen na barvě certifikátu', 'ano, délka je rozhodující', 'ne — jednotvárnost a slova/slabiky se dají uhodnout', 'ano, pokud obsahuje diakritiku'],
+        h: 3017383147, s: '', explain: 'Samé malé znaky = malý prostor; cracker zkusí slova a slabiky ze slovníku, ne znak po znaku.' },
+      { level: 'HODNOCENÍ', q: 'Proč je lepší, aby hesla ukládal správce hesel, a ne „hlava“?',
+        options: ['hesla se pak sama bezpečně posílají e-mailem', 'všechna hesla sjednotí na jedno, ať si pamatuješ jen je', 'pro každý účet vygeneruje jiné silné heslo a ty si nic nemusíš pamatovat', 'je to jediný zákonný způsob, jak hesla skladovat'],
+        h: 3816757008, s: '', explain: 'Správce vytvoří pro každý účet unikátní, dlouhé heslo a vyplní ho sám. Opakovaná hesla jsou hlavní příčinou kompromitace účtů.' },
+      { level: 'TVORBA', q: 'Navrhni princip zapamatovatelného A silného hesla:',
+        options: ['oblíbené slovo + 123', 'opakovat jeden znak, ať je heslo dlouhé', 'paměťová věta → první písmena slov + číslo a symbol', 'dvanáct náhodných znaků bez jakéhokoli záměru'],
+        h: 2850383059, s: '', explain: 'Mnemonika (první písmena věty) dává délku a třídy znaků, ale zůstává zapamatovatelná.' },
+      { level: 'TVORBA', q: 'Z věty „Můj kocour Mourek skáče do louže“ vyber nejlepší heslo z prvních písmen:',
+        options: ['mourek2026', 'kocmur', 'MKMsdL8!', 'mlsdlouze'],
+        h: 3569776934, s: '', explain: 'První písmena + 8 a ! dávají 4 třídy znaků i paměťovou kotvu.' },
+      { level: 'POROZUMĚNÍ', q: 'Co se stane s heslem po zavření certifikátu v trenažéru?',
+        options: ['zůstane v poli pro příští návštěvu', 'zůstane v historii prohlížeče', 'nenávratně se smaže z paměti stránky', 'uloží se na disk a pošle se na server'],
+        h: 2229553413, s: '', explain: 'Heslo žije jen v paměti stránky; certifikát (ani jeho PNG) heslo nikdy neobsahuje a po zavření se smaže.' },
+    ];  // celkem 23 otázek, z toho 3 s více správnými odpověďmi
+
+    const quizProgress = document.getElementById('quizProgress');
+    const quizLevelTag = document.getElementById('quizLevelTag');
+    const quizQuestion = document.getElementById('quizQuestion');
+    const quizOptionsEl = document.getElementById('quizOptions');
+    const quizFeedback = document.getElementById('quizFeedback');
+    const quizNextBtn = document.getElementById('quizNextBtn');
+    const quizSubmitMulti = document.getElementById('quizSubmitMulti');
+    const quizMultiHint = document.getElementById('quizMultiHint');
+    
+    let quizDeck = [];
+    let quizDoneCount = 0;
+    let curQ = null;
+    
+    // Známka podle Bloomovy taxonomie: váha otázky = úroveň (1–6), multi +1;
+    // známka se počítá z prvního pokusu, protože kvíz točí otázky dokud nejsou správně (100 % na konci)
+    const BLOOM_WEIGHT = { 'ZAPAMATOVÁNÍ': 1, 'POROZUMĚNÍ': 2, 'APLIKACE': 3, 'ANALÝZA': 4, 'HODNOCENÍ': 5, 'TVORBA': 6 };
+    const GRADE_WORDS = { 1: 'výborný', 2: 'chvalitebný', 3: 'dobrý', 4: 'dostatečný', 5: 'nedostatečný' };
+    const bloomWeight = q => (BLOOM_WEIGHT[q.level] || 1) + (q.multi ? 1 : 0);
+    let quizTotalWeight = 0;
+    let quizOkWeight = 0;
+    let quizLevelStats = {};
+    let quizGrade = null;
+    let quizGradePct = 0;
+    
+    function shuffleArr(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+      }
+      return a;
+    }
+    
+    function applyQuizView() {
+      gateIntro.classList.toggle('trainer-hidden', quizState !== 'intro');
+      gateQuiz.classList.toggle('trainer-hidden', quizState !== 'quiz');
+      quizDoneBox.classList.toggle('trainer-hidden', quizState !== 'done');
+    }
+    
+    function startQuiz() {
+      quizState = 'quiz';
+      applyQuizView();
+      quizDeck = shuffleArr(QUIZ_BANK.map(q => Object.assign({}, q)));
+      quizDoneCount = 0;
+      quizTotalWeight = 0;
+      quizOkWeight = 0;
+      quizLevelStats = {};
+      QUIZ_BANK.forEach(q => {
+        quizTotalWeight += bloomWeight(q);
+        if (!quizLevelStats[q.level]) quizLevelStats[q.level] = { total: 0, ok: 0 };
+        quizLevelStats[q.level].total++;
+      });
+      renderQuizQuestion();
+    }
+    
+    function renderQuizQuestion() {
+      if (!quizDeck.length) { quizPassed(); return; }
+      curQ = quizDeck[0];
+      quizProgress.textContent = 'SPLNĚNO ' + quizDoneCount + '/' + QUIZ_BANK.length;
+      quizLevelTag.textContent = curQ.level;
+      quizQuestion.textContent = curQ.q;
+      quizOptionsEl.innerHTML = '';
+      quizFeedback.className = 'quiz-feedback';
+      quizFeedback.textContent = curQ.retry > 0
+        ? 'Opakování #' + curQ.retry + ' — minule jsi odpověděl(a) špatně. Vrátí se, dokud ji nezodpovíš správně (100 %).'
+        : '';
+      quizNextBtn.classList.add('trainer-hidden');
+      const multi = !!curQ.multi;
+      quizSubmitMulti.classList.toggle('trainer-hidden', !multi);
+      quizMultiHint.classList.toggle('trainer-hidden', !multi);
+      // runtime zamíchání: pořadí odpovědí na obrazovce sám o sobě nic neprozrazuje
+      const labels = shuffleArr(Object.keys(curQ.options));
+      labels.forEach((k, pos) => {
+        const b = document.createElement('button');
+        b.className = 'quiz-opt';
+        b.dataset.o = curQ.options[k];
+        b.textContent = String.fromCharCode(65 + pos) + ')  ' + curQ.options[k];
+        if (multi) {
+          b.addEventListener('click', () => {
+            if (b.disabled) return;
+            b.classList.toggle('selected');
+          });
+        } else {
+          b.addEventListener('click', () => answerQuizSingle(b));
+        }
+        quizOptionsEl.appendChild(b);
+      });
+    }
+    
+    function quizHashOf(b) {
+      return strHash(b.dataset.o + (curQ.s || ''));
+    }
+    
+    function answerQuizSingle(selBtn) {
+      const opts = Array.from(quizOptionsEl.querySelectorAll('.quiz-opt'));
+      opts.forEach(o => o.disabled = true);
+      const ansHashes = Array.isArray(curQ.h) ? curQ.h : [curQ.h];
+      const ok = ansHashes.includes(quizHashOf(selBtn));
+      opts.forEach(o => { if (ansHashes.includes(quizHashOf(o))) o.classList.add('correct'); });
+      if (!ok) selBtn.classList.add('wrong');
+      finishQuizAnswer(ok);
+    }
+    
+    function submitMultiQuiz() {
+      const opts = Array.from(quizOptionsEl.querySelectorAll('.quiz-opt'));
+      opts.forEach(o => o.disabled = true);
+      const ans = Array.isArray(curQ.h) ? curQ.h.slice() : [curQ.h];
+      const selHashes = opts.filter(o => o.classList.contains('selected')).map(quizHashOf);
+      const ok = selHashes.length === ans.length && selHashes.every(h => ans.includes(h));
+      opts.forEach(o => {
+        const h = quizHashOf(o);
+        if (ans.includes(h)) o.classList.add('correct');
+        if (!ans.includes(h) && o.classList.contains('selected')) o.classList.add('wrong');
+      });
+      finishQuizAnswer(ok);
+    }
+    
+    function finishQuizAnswer(ok) {
+      curQ.tries = (curQ.tries || 0) + 1;
+      const firstTry = curQ.tries === 1;
+      quizFeedback.className = 'quiz-feedback ' + (ok ? 'quiz-fb-ok' : 'quiz-fb-bad');
+      quizFeedback.textContent = (ok ? '✓ SPRÁVNĚ — ' : '✗ ŠPATNĚ — ') + curQ.explain;
+      if (ok) {
+        if (firstTry) {
+          quizOkWeight += bloomWeight(curQ);
+          if (quizLevelStats[curQ.level]) quizLevelStats[curQ.level].ok++;
+        }
+        quizDeck.shift();
+        quizDoneCount++;
+        if (!quizDeck.length) { quizPassed(); return; }
+        quizNextBtn.classList.remove('trainer-hidden');
+        quizNextBtn.textContent = 'DALŠÍ OTÁZKA →';
+      } else {
+        // špatně → otázka se otočí na konec balíčku (ne duplikuje!), dokud není zvládnuta
+        const q = quizDeck.shift();
+        q.retry = (q.retry || 0) + 1;
+        quizDeck.push(q);
+        quizNextBtn.classList.remove('trainer-hidden');
+        quizNextBtn.textContent = 'ZKOUSÍM ZNOVU →';
+      }
+    }
+    quizNextBtn.addEventListener('click', renderQuizQuestion);
+    quizSubmitMulti.addEventListener('click', submitMultiQuiz);
+    
+    function bloomReportHTML() {
+      const order = Object.keys(quizLevelStats).sort((a, b) => (BLOOM_WEIGHT[a] || 9) - (BLOOM_WEIGHT[b] || 9));
+      const lines = order.map(lv => {
+        const s = quizLevelStats[lv];
+        const ok = s.ok === s.total;
+        return '<span class="' + (ok ? 'qb-ok' : 'qb-bad') + '">' + (ok ? '✓' : '✗') + ' ' + lv + ' ' + s.ok + '/' + s.total + '</span>';
+      }).join('');
+      const weak = order.filter(lv => quizLevelStats[lv].ok < quizLevelStats[lv].total);
+      let txt = '<div class="quiz-bloom-line">' + lines + '</div>';
+      txt += weak.length
+        ? '<div class="text-xs dim-70" style="margin-top:0.5rem;">Slabší úrovně: <b style="color:#ff6600;">' + weak.join(', ') + '</b> — vrať se prosím k vysvětlením u špatných odpovědí.</div>'
+        : '<div class="text-xs dim-60" style="margin-top:0.5rem;">Všechny úrovně Bloomovy taxonomie zvládnuty hned napoprvé.</div>';
+      return txt;
+    }
+    
+    function quizPassed() {
+      quizState = 'done';
+      quizGradePct = Math.round(100 * quizOkWeight / Math.max(quizTotalWeight, 1));
+      quizGrade = quizGradePct >= 90 ? 1 : quizGradePct >= 75 ? 2 : quizGradePct >= 60 ? 3 : quizGradePct >= 45 ? 4 : 5;
+      const good = quizGrade <= 2;
+      applyQuizView();
+      const head = document.getElementById('quizDoneHeadline');
+      head.textContent = (good ? '✓ KVÍZ SPLNĚN' : '✗ KVÍZ DOKONČEN') + ' · ZNÁMKA ' + quizGrade + ' (' + GRADE_WORDS[quizGrade] + ')';
+      head.style.color = good ? '#39ff14' : '#ff6600';
+      document.getElementById('quizGradeNum').textContent = quizGrade;
+      document.getElementById('quizGradeWord').textContent = GRADE_WORDS[quizGrade];
+      document.getElementById('quizGradePct').textContent = 'Bloom skóre (vážené dle úrovní taxonomie): ' + quizGradePct + ' %';
+      document.getElementById('quizBloomReport').innerHTML = bloomReportHTML();
+      document.getElementById('quizFailGrade').textContent = quizGrade + ' (' + GRADE_WORDS[quizGrade] + ')';
+      document.getElementById('quizCertArea').style.display = good ? '' : 'none';
+      document.getElementById('quizFailArea').style.display = good ? 'none' : '';
+      if (good) { openCertificate('quiz'); }
+    }
+    document.getElementById('quizCertBtn').addEventListener('click', () => openCertificate('quiz'));
+    document.getElementById('quizRestartBtn').addEventListener('click', startQuiz);
+    document.getElementById('quizFailRepeatBtn').addEventListener('click', startQuiz);
+    document.getElementById('quizFailTrainerBtn').addEventListener('click', () => { switchTab('lab'); trainerPassword.focus(); });
+    
+    // ============ NÁPADY: rotující bezpečnostní tipy + žárovka ============
+    const TIPS = [
+      'Nejhorší hesla roku jsou pořád „123456“, „heslo“ a „qwerty“. Délka je první a nejlevnější obrana.',
+      'Heslo si zapamatuješ snáz z příběhu: „Rží u tučňáka je můj ZŠ tým 2026!“ → RžiuT!2026 — delší, náhodné, s třídami.',
+      'Počítačová klíčenka (Windows Credential Manager / macOS Klíčenka) je pro bankovnictví na počítači nejvhodnější úložiště.',
+      'Google Hesla (Password Manager) ukládá zaheslovaně a nejvíc chrání s dvoufázovým ověřením — klidně ho používej.',
+      'Stejné heslo na deseti webech = jeden únik = všechny účty pryč. Správce hesel tohle vyřeší za tebe.',
+      'Sílu dělá délka + třídy znaků. Leetspeak „3“ místo „e“ u známého slova crackery jen tak nepotěší.',
+      'E-mail od „banky“ s tlačítkem změníš heslo je 9× z 10 phishing. Hesla se nemění přes odkaz z e-mailu.',
+      'Dvoufázové ověření (2FA) je druhá zámková pojistka — i ukradené heslo je pak k ničemu.',
+      'Papír s hesly nalepený u monitoru je první místo, kam se digitalizovaný zloděj nedostane — ale občas přiblíží kameru.',
+      'SMS není 2FA úplně ideální — aplikace pro ověřování (authenticator) je bezpečnější a funguje i bez signálu.',
+      'Když heslo někam píšeš, zkontroluj URL lištu a okolí. Phishingová stránka nemusí poznat ani kvízový šampion.',
+      'Vygenerované heslo ze správce hesel (16+ znaků) porazí každé „chytře vymyšlené“ heslo ze slovníku.'
+    ];
+    const tipStripEl = document.getElementById('tipStrip');
+    const tipBulbEl = document.getElementById('tipBulb');
+    const tipTagEl = document.getElementById('tipTag');
+    const tipTextEl = document.getElementById('tipText');
+    const tipNextBtn = document.getElementById('tipNextBtn');
+    let tipIdx = -1;
+    function showTip() {
+      tipIdx = (tipIdx + 1) % TIPS.length;
+      tipTagEl.textContent = 'NÁPAD ' + (tipIdx + 1) + '/' + TIPS.length;
+      tipTextEl.textContent = TIPS[tipIdx];
+    }
+    tipNextBtn.addEventListener('click', showTip);
+    showTip();
+    // žárovka „občas zazáří“ — náhodné rozsvícení i zhasnutí
+    let bulbTimer = null;
+    function scheduleBulb() {
+      bulbTimer = setTimeout(() => {
+        tipBulbEl.classList.add('on');
+        setTimeout(() => tipBulbEl.classList.remove('on'), 900);
+        scheduleBulb();
+      }, 3500 + Math.random() * 8000);
+    }
+    scheduleBulb();
+    setInterval(showTip, 14000); // další nápad a další a další…
+    
+    // ============ TRAINER (bezpečný režim: heslo jen v paměti) ============
+    const trainerLevels = {
+      easy:   { name: 'LEHKÝ',  length: 8,  classes: 2, description: 'Pro začátek — minimální délka' },
+      medium: { name: 'STŘEDNÍ',length: 12, classes: 3, description: 'Běžné heslo — 3 třídy znaků' },
+      strong: { name: 'SILNÝ',  length: 16, classes: 4, description: 'Pro citlivé účty — 4 třídy a délka' }
+    };
+    const TRAINER_ENTROPY = { easy: 25, medium: 45, strong: 70 }; // hranice pro laboratoř i ověření
+    
+    const levelCardsEl = document.getElementById('levelCards');
+    const trainerRulesEl = document.getElementById('trainerRules');
+    const trainerPassword = document.getElementById('trainerPassword');
+    const trainerHintNeeds = document.getElementById('trainerHintNeeds');
+    const trainerProgress = document.getElementById('trainerProgress');
+    const trainerHintPersonal = document.getElementById('trainerHintPersonal');
+    const certNameInput = document.getElementById('certNameInput');
+    certNameInput.addEventListener('input', () => {
+      if (certNameInput.value.trim()) studentName = certNameInput.value.trim();
+    });
+    const certifyBtn = document.getElementById('certifyBtn');
+    const certModal = document.getElementById('certModal');
+    const certBody = document.getElementById('certBody');
+    const certCopyBtn = document.getElementById('certCopyBtn');
+    const pwToggle = document.getElementById('pwToggle');
+    const suggestBtn = document.getElementById('suggestBtn');
+    
+    let currentLevel = 'medium';
+    let trainerSecret = null;      // jediné úložiště hesla — runtime, nikdy ne na disk
+    let trainerDone = false;       // blokuje znovu-použití po dokončení
+    
+    function trainRulesFor(level) {
+      const lv = trainerLevels[level];
+      return [
+        { id: 'length', label: `Heslo má alespoň ${lv.length} znaků (nyní {n})`, test: p => p.length >= lv.length },
+        { id: 'lower', label: 'Obsahuje malá písmena (a–z)', test: p => /[a-z]/.test(p) },
+        { id: 'upper', label: 'Obsahuje velká písmena (A–Z)', test: p => /[A-Z]/.test(p) },
+        { id: 'digit', label: 'Obsahuje číslici (0–9)', test: p => /[0-9]/.test(p) },
+        { id: 'symbol', label: 'Obsahuje speciální znak (!@#…)', test: p => /[^a-zA-Z0-9]/.test(p) },
+        { id: 'unique', label: 'Má alespoň {u} unikátních znaků', test: p => new Set(p).size >= Math.min(lv.length, 8) },
+        { id: 'common', label: 'Není to běžné/známé slovo (heslo, 123456…)', test: p => !COMMON_WORDS.has(p.toLowerCase()) }
+      ].filter(r => r.id !== 'symbol' || lv.classes >= 4)
+       .filter(r => r.id !== 'common' || lv.length >= 12);
+    }
+    
+    const COMMON_WORDS = new Set(['heslo','password','123456','12345678','qwerty','abc123','letmein','password12','admin','monkey','dragon','qwerty123','password1','iloveyou']);
+    
+    function renderLevelCards() {
+      levelCardsEl.innerHTML = '';
+      Object.keys(trainerLevels).forEach(key => {
+        const lv = trainerLevels[key];
+        const div = document.createElement('div');
+        div.className = 'level-card' + (key === currentLevel ? ' selected' : '');
+        div.innerHTML = `<div class="lc-name neon-cyan">${lv.name}</div>
+          <div class="lc-length">min ${lv.length} znaků · ${lv.classes} třídy</div>
+          <div class="text-xs dim-70">${lv.description}</div>`;
+        div.onclick = () => { currentLevel = key; renderLevelCards(); renderRules(); runTrainer(); };
+        levelCardsEl.appendChild(div);
+      });
+    }
+    
+    function renderRules() {
+      trainerRulesEl.innerHTML = '';
+      const rules = trainRulesFor(currentLevel);
+      rules.forEach(r => {
+        const li = document.createElement('li');
+        li.className = 'rule-item pending';
+        li.dataset.rule = r.id;
+        li.innerHTML = `<span class="rule-icon">◻</span><span class="rule-bul">●</span><span>${r.label}</span>`;
+        trainerRulesEl.appendChild(li);
+      });
+    }
+    
+    function runTrainer() {
+      const pw = trainerPassword.value;
+      trainerSecret = pw === '' ? null : pw;
+      const rules = trainRulesFor(currentLevel);
+      let okCount = 0;
+      let firstFail = null;
+      rules.forEach(r => {
+        const li = trainerRulesEl.querySelector(`[data-rule="${r.id}"]`);
+        if (!li) return;
+        const pass = r.test(pw);
+        const labelText = r.label
+          .replace('{n}', pw.length)
+          .replace('{u}', Math.min(trainerLevels[currentLevel].length, 8));
+        if (pass) {
+          li.className = 'rule-item ok';
+          li.innerHTML = `<span class="rule-icon">✓</span><span class="rule-bul">●</span><span>${labelText}</span>`;
+          okCount++;
+        } else {
+          li.className = 'rule-item fail';
+          li.innerHTML = `<span class="rule-icon">✗</span><span class="rule-bul">●</span><span>${labelText}</span>`;
+          if (!firstFail) firstFail = { id: r.id, label: labelText };
+        }
+      });
+      
+      const total = rules.length;
+      trainerProgress.textContent = `Splněno ${okCount} z ${total} požadavků.`;
+      
+      // Nápověda: co chybí
+      if (pw === '') {
+        trainerHintNeeds.textContent = 'Vytvoř ideální heslo výše — trenažér ti postupně odhalí, co mu chybí.';
+      } else if (firstFail) {
+        trainerHintNeeds.textContent = '⚠ Chybí: ' + firstFail.label;
+      } else {
+        trainerHintNeeds.textContent = '✓ Vše splněno! Můžeš pokračovat na certifikát.';
+      }
+      
+      const canCert = pw.length > 0 && okCount === total;
+      certifyBtn.disabled = !canCert;
+      document.getElementById('certifyLabel').textContent = canCert
+        ? 'POTVRDIT & ZOBRAZIT CERTIFIKÁT'
+        : '⛔ PASS — PRAVIDLA NESPLNĚNA';
+      updateTrainerAnalysis();
+    }
+    
+    function suggestIdea() {
+      // Osobní nápověda: kombinace toho, co znáš jen ty — nikdy nenabízí hotové heslo
+      const prompts = [
+        'Oblíbený zpěvák nebo kapela + číslo, které si vybavíš.',
+        'Oblíbené jídlo + rok, který je ti blízký.',
+        'Název ulice, kde jsi bydlel(a) + oblíbený symbol.',
+        'Dvě slova, co znáš jen ty, spojená znakem (+) a číslem.',
+        'Zkratka oblíbeného výroku + letopočet.'
+      ];
+      const q = prompts[Math.floor(pseudoRand(strHash(Date.now() + '') ) * prompts.length)];
+      trainerHintPersonal.style.display = 'block';
+      trainerHintPersonal.textContent = '💡 Nápad bez uložení: ' + q +
+        ' Heslo pak můžeš „vylepšit“ pomocí Leet transformace (např. a→4, o→0) pro lepší zapamatovatelnost.';
+    }
+    
+    // ============ KRYPTO-LINGVISTICKÝ ANALYZÁTOR HESEL ============
+    // Odlehčená verze zxcvbn: rozkládá heslo na vzory (slova, l33t, klávesnice,
+    // sekvence, data) a odhaduje efektivní entropii v bitech. Vše lokálně,
+    // bez ukládání, deterministicky.
+    
+    // propojení s passmake: leet upraví navržený řetězec pro lepší paměť/zadávání
+    function applyLeetSuggestion(base) {
+      // deterministická transformace základních znaků
+      const map = { a:'4', e:'3', i:'1', o:'0', s:'5', t:'7' };
+      return base.split('').map(c => {
+        const l = c.toLowerCase();
+        return map[l] || c;
+      }).join('');
+    }
+    
+    // Malý korpus běžných českých osobních slov (výuka — odhad, ne útok)
+    const CZ_DICT = new Set([
+      'kocour','turbo','auto','pes','kočka','láska','karel','jana','petr','pavel',
+      'josef','jan','milan','ivana','dům','škola','práce','léto','zima','voda',
+      'den','město','praha','brno','slunce','modra','zelen','cerven','hrad',
+      'klub','sport','film','hudba','kam','rodina','jmeno','ulice','byt','rok',
+      'kod','heslo','jidlo','knedlik','vyborne','tajem','mila','maj','bez','nej',
+      'mam','rad','je','se','na','do','od','za','ke','pod','nad','ale','my','ty','on'
+    ]);
+    const WEAK_PASS = new Set(['password','123456','123456789','qwerty','abc123','111111','iloveyou','secret','shadow','supersecret','letmein','welcome','passw0rd','qwerty123','dragon','monkey','login','admin','master','123123']);
+    // Reverzní l33t mapa pro odhalení „převlečených“ slov (a→4, e→3, o→0 …)
+    const L33T_REV = { '4':'a','@':'a','3':'e','1':'i','!':'i','0':'o','5':'s','$':'s','7':'t','+':'t','8':'b','9':'g','2':'z','6':'g' };
+    const KB_ROWS = ['qwertyuiop','asdfghjkl','zxcvbnm','1234567890','!@#$%^&*()_+-='];
+    
+    function reverseL33T(s) {
+      // mapuje leet znak zpět na písmeno (pro porovnání se slovníkem)
+      return s.split('').map(c => L33T_REV[c] || c).join('');
+    }
+    function deaccent(s) {
+      // odstraní diakritiku pomocí existující normalization mapy leetData
+      return s.split('').map(c => (leetData.normalization.rules[c] || c)).join('');
+    }
+    
+    function analyzePassword(pw) {
+      if (!pw) return { len:0, classes:0, effectiveBits:0, patterns:[], typability:1, weakPoint:'empty' };
+      const len = pw.length;
+      const lower = /[a-z]/.test(pw);
+      const upper = /[A-Z]/.test(pw);
+      const digit = /[0-9]/.test(pw);
+      const special = /[^a-zA-Z0-9]/.test(pw);
+      const classes = [lower, upper, digit, special].filter(Boolean).length;
+      let charset = 0;
+      if (lower) charset += 26;
+      if (upper) charset += 26;
+      if (digit) charset += 10;
+      if (special) charset += 20;
+      const naiveBits = len * Math.log2(charset || 2);
+      
+      const patterns = [];
+      const base = deaccent(pw.toLowerCase());
+      const rev = reverseL33T(base);
+      
+      // 1) běžná slova (i „převlečená“ leetem)
+      for (const w of CZ_DICT) {
+        if (w.length >= 3 && rev.includes(w)) {
+          patterns.push({ type:'dictionary', match:w, bits: Math.log2(CZ_DICT.size) + 2 });
+        }
+      }
+      // 2) častá hesla
+      if (WEAK_PASS.has(rev) || WEAK_PASS.has(base)) {
+        patterns.push({ type:'weak', match: pw, bits: 10 });
+      }
+      // 3) procházky po klávesnici (qwerty, asdf, 1234 …)
+      for (const row of KB_ROWS) {
+        for (let i = 0; i + 3 <= row.length && i < 8; i++) {
+          const sub = row.slice(i, Math.min(i + 6, row.length));
+          if (sub.length >= 3 && base.includes(sub)) {
+            patterns.push({ type:'walk', match: sub, bits: sub.length * 1.4 });
+          }
+        }
+      }
+      // 4) sekvence a opakování
+      if (/123|234|345|456|567|678|789|987|876|765|654|543|432|321/.test(rev)) {
+        patterns.push({ type:'sequence', match:'číselná', bits: 8 });
+      }
+      if (/(.)\1{2,}/.test(rev)) {
+        patterns.push({ type:'repeat', match:'opakování', bits: 8 });
+      }
+      // 5) data (roky 1900–2030)
+      if (/\b(19[0-9]{2}|20[0-3][0-9])\b/.test(pw) || /(0[1-9]|1[0-9]|2[0-9]|3[01])\.(0[1-9]|1[0-2])/.test(pw)) {
+        patterns.push({ type:'date', match:'datum', bits: 10 });
+      }
+      
+      // Odhad efektivní entropie: síla vzoru × pokrytí, omezeno naivní hodnotou
+      let patternBits = 0;
+      patterns.forEach(p => { patternBits += p.bits; });
+      let usedLen = 0;
+      const sorted = patterns.slice().sort((a,b) => b.match.length - a.match.length);
+      sorted.forEach(p => { usedLen = Math.min(len, usedLen + p.match.length); });
+      const remaining = Math.max(0, len - usedLen);
+      const effectiveBits = Math.max(2, Math.min(naiveBits, Math.max(patternBits + remaining * Math.log2(charset || 2) * 0.5, patternBits)));
+      
+      // Rychlost zadání (0–1): Shift/alt znaky zpomalují
+      let typ = 1;
+      const hard = (pw.match(/[!@#$%^&*()_=+[\]{}<>;:'",.\/?\\|`~]/g) || []).length;
+      typ -= hard * 0.15;
+      typ -= (pw.match(/[A-Z]/g) || []).length * 0.05;
+      if (len > 18) typ -= 0.2;
+      typ = Math.max(0.05, Math.min(1, typ));
+      
+      // Nejsilnější slabina (pro diagnostiku)
+      let weakPoint = 'ok';
+      if (patterns.some(p => p.type === 'weak') || effectiveBits < 25) weakPoint = 'pattern';
+      else if (classes < 3) weakPoint = 'classes';
+      else if (effectiveBits < 45) weakPoint = 'length';
+      else if (typ < 0.6) weakPoint = 'typing';
+      
+      return { len, classes, effectiveBits: Math.round(effectiveBits), patterns, typability: typ, weakPoint };
+    }
+    
+    // ============ MECHANISMUS NABÍDEK TRANSFORMACÍ ============
+    // Na základě analýzy pozná, kdy má smysl nabídnout úpravu, a rovnou ji umí
+    // deterministicky aplikovat (vždy jen do paměti, nikam se neukládá).
+    
+    function keyboardShiftVariant(s) {
+      // propojení s passmake funkcí keyboard_shift — „blízkost kláves“, rychlé psaní
+      const map = leetData.keyboard_shift.map || {};
+      return s.split('').map(c => {
+        const l = c.toLowerCase();
+        return map[l] ? (c === c.toUpperCase() ? map[l].toUpperCase() : map[l]) : c;
+      }).join('');
+    }
+    
+    function detectTransformApplicability(pw, fn) {
+      // ověří, zda transformace zanechá použitelné a odlišné heslo
+      if (!pw) return { feasible: false };
+      try {
+        const res = fn(pw);
+        if (!res || res === pw || res.length === 0 || res.length > 64) return { feasible: false };
+        return { feasible: true, result: res };
+      } catch (e) {
+        return { feasible: false };
+      }
+    }
+    
+    function suggestImprovements(pw, analysis, lv) {
+      const list = [];
+      if (!pw) return list;
+      const add = (label, desc, apply) => {
+        const chk = detectTransformApplicability(pw, apply);
+        if (!chk.feasible) return;
+        list.push({ label, desc, result: chk.result, apply });
+      };
+      
+      const hasDigit = /[0-9]/.test(pw);
+      const hasSpecial = /[^a-zA-Z0-9]/.test(pw);
+      const hasUpper = /[A-Z]/.test(pw);
+      const hasWeakPattern = analysis.patterns.some(p => p.type === 'weak' || p.type === 'dictionary');
+      
+      // Slabý vzor / slovo uhodnutelné → leet = lepší zápis, čitelné, jiný vzhled
+      if (hasWeakPattern) {
+        add('VYLEPŠI LEETEM', 'a→4, e→3, o→0, s→5 — čitelné, přidá číslice a „jiný vzhled“', applyLeetSuggestion);
+      }
+      // Procházka po klávesnici → posun o klávesu = neznámý vzor, rychlé psaní
+      if (analysis.patterns.some(p => p.type === 'walk' || p.type === 'sequence')) {
+        add('POSUN NA KLÁVESNICI', 'každé písmeno posuň o jednu klávesu (keyboard-shift) — jiný vzor, stále rychle zadatelné', keyboardShiftVariant);
+      }
+      // Chybí číslice / speciální znak → leet + oddělovač
+      if (!hasDigit) {
+        add('PŘIDAT ČÍSLICE', 'leetspeak a→4, o→0, s→5 doplní číslice', applyLeetSuggestion);
+      }
+      if (!hasSpecial) {
+        add('PŘIDAT ODDĚLOVAČ', 'spoj slova znakem _ nebo - (zlepší i zapamatovatelnost)', s => s + (s.includes('_') ? '-' : '_'));
+      }
+      // Krátké heslo → prodloužit, ale zapamatovatelně (ne náhodné „kostičky“)
+      if (analysis.len < lv.length) {
+        add('PRODLOUŽIT VETU', 'doplň za slovo číslo/město, které znáš jen ty (např. 2004)', s => s + deaccent(s.toLowerCase()).replace(/[^a-z]/g, '').slice(0, 3));
+      }
+      // Chybí velké písmeno → první písmeno velkým
+      if (!hasUpper && /[a-z]/.test(pw)) {
+        add('VELKÉ PÍSMENO', 'první písmeno zvětši — neuškodí rychlosti zadání', s => s.replace(/^([a-z])/, m => m.toUpperCase()));
+      }
+      return list.slice(0, 4);
+    }
+    
+    // UI: metriky + diagnostika
+    const metricEntropy = document.getElementById('metricEntropy');
+    const metricEntropyFill = document.getElementById('metricEntropyFill');
+    const metricTyp = document.getElementById('metricTyp');
+    const metricTypFill = document.getElementById('metricTypFill');
+    const trainerWeak = document.getElementById('trainerWeak');
+    const diagList = document.getElementById('diagList');
+    
+    function weakToText(w) {
+      const map = {
+        pattern: 'slabý vzor (známé slovo/heslo) snižuje skutečnou sílu hesla',
+        classes: 'kombinuje málo druhů znaků — přidej velké/číslici/symbol',
+        length: 'heslo je krátké, kryptograficky slabé',
+        typing: 'hodně Shift/alt znaků — pomalé a chybové zadávání',
+        empty: 'zadej heslo pro analýzu'
+      };
+      return map[w] || 'heslo vypadá v pořádku';
+    }
+    
+    function updateTrainerAnalysis() {
+      const pw = trainerPassword.value;
+      const a = analyzePassword(pw);
+      const lv = trainerLevels[currentLevel];
+      const targets = TRAINER_ENTROPY;
+      const target = targets[currentLevel] || 45;
+      
+      metricEntropy.textContent = a.effectiveBits + ' bitů';
+      metricEntropyFill.style.width = Math.min(100, Math.round(a.effectiveBits / target * 100)) + '%';
+      metricTyp.textContent = Math.round(a.typability * 100) + ' %';
+      metricTypFill.style.width = Math.round(a.typability * 100) + '%';
+      
+      const isOk = a.weakPoint === 'ok' || a.weakPoint === 'empty';
+      trainerWeak.className = 'trainer-weak' + (isOk ? ' ok' : '');
+      trainerWeak.textContent = pw === ''
+        ? 'Vytvoř ideální heslo výše — program prozkoumá jeho kvalitu a nabídne vylepšení.'
+        : (isOk ? '✓ ' : '⚠ ') + weakToText(a.weakPoint);
+      
+      // nabídky transformací
+      diagList.innerHTML = '';
+      suggestImprovements(pw, a, lv).forEach(sug => {
+        const li = document.createElement('li');
+        li.className = 'diag-item';
+        const desc = document.createElement('span');
+        desc.className = 'diag-desc';
+        desc.textContent = sug.desc;
+        li.appendChild(desc);
+        if (sug.result !== null) {
+          const btn = document.createElement('button');
+          btn.className = 'diag-apply';
+          btn.textContent = sug.label;
+          btn.addEventListener('click', () => {
+            if (trainerDone) return;
+            trainerPassword.value = sug.result;
+            runTrainer();
+            trainerPassword.focus();
+          });
+          li.appendChild(btn);
+        }
+        diagList.appendChild(li);
+      });
+    }
+    
+    trainerPassword.addEventListener('input', () => { if (!trainerDone) runTrainer(); });
+    
+    document.getElementById('analyzeBtn').addEventListener('click', () => {
+      if (trainerDone) return;
+      updateTrainerAnalysis();
+    });
+    
+    pwToggle.addEventListener('click', () => {
+      const isPw = trainerPassword.type === 'password';
+      trainerPassword.type = isPw ? 'text' : 'password';
+      pwToggle.style.color = isPw ? 'var(--neon-magenta)' : 'var(--neon-cyan)';
+      pwToggle.setAttribute('title', isPw ? 'Skrýt zobrazení' : 'Zobrazit heslo');
+      pwToggle.setAttribute('aria-label', isPw ? 'Skrýt zobrazení hesla' : 'Zobrazit heslo');
+    });
+    
+    suggestBtn.addEventListener('click', suggestIdea);
+    
+    // ============ OVĚŘENÍ ZNALOSTI (prokazatelná zkouška, bez ukládání) ============
+    const showQuizTabBtn = document.getElementById('showQuizTabBtn');
+    const showTrainerTabBtn = document.getElementById('showTrainerTabBtn');
+    const showVerifyBtn = document.getElementById('showVerifyBtn');
+    const quizContent = document.getElementById('quizContent');
+    const labContent = document.getElementById('labContent');
+    const verifyPanel = document.getElementById('verifyPanel');
+    const verifyLevelSelect = document.getElementById('verifyLevelSelect');
+    const verifyTarget = document.getElementById('verifyTarget');
+    const verifyPassword = document.getElementById('verifyPassword');
+    const verifyPwToggle = document.getElementById('verifyPwToggle');
+    const verifyRulesEl = document.getElementById('verifyRules');
+    const verifyEntropy = document.getElementById('verifyEntropy');
+    const verifyEntropyFill = document.getElementById('verifyEntropyFill');
+    const verifyClasses = document.getElementById('verifyClasses');
+    const verifyClassesFill = document.getElementById('verifyClassesFill');
+    const verifyStamp = document.getElementById('verifyStamp');
+    const verifyStampWhen = document.getElementById('verifyStampWhen');
+    const verifyStampSub = document.getElementById('verifyStampSub');
+    let verifyLevel = 'medium';
+    let verifyInited = false;
+    
+    function initVerify() {
+      if (verifyInited) return;
+      verifyInited = true;
+      verifyLevelSelect.innerHTML = '';
+      Object.keys(trainerLevels).forEach(key => {
+        const lv = trainerLevels[key];
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = `OBTÍŽNOST ${lv.name} — min ${lv.length} znaků, ${lv.classes} třídy`;
+        verifyLevelSelect.appendChild(opt);
+      });
+      verifyLevelSelect.value = verifyLevel;
+      verifyTarget.textContent = TRAINER_ENTROPY[verifyLevel] + ' bitů (zxcvbn)';
+      buildVerifyRules();
+      verifyLevelSelect.addEventListener('change', () => {
+        verifyLevel = verifyLevelSelect.value;
+        verifyTarget.textContent = TRAINER_ENTROPY[verifyLevel] + ' bitů (zxcvbn)';
+        buildVerifyRules();
+        runVerify();
+      });
+      verifyPassword.addEventListener('input', runVerify);
+      verifyPwToggle.addEventListener('click', () => {
+        const isPw = verifyPassword.type === 'password';
+        verifyPassword.type = isPw ? 'text' : 'password';
+        verifyPwToggle.setAttribute('title', isPw ? 'Skrýt heslo' : 'Zobrazit heslo');
+        verifyPwToggle.setAttribute('aria-label', isPw ? 'Skrýt heslo' : 'Zobrazit heslo');
+      });
+    }
+    
+    function buildVerifyRules() {
+      verifyRulesEl.innerHTML = '';
+      trainRulesFor(verifyLevel).forEach(r => {
+        const li = document.createElement('li');
+        li.className = 'rule-item pending';
+        li.dataset.rule = r.id;
+        li.dataset.label = r.label;
+        li.innerHTML = `<span class="rule-icon">◻</span><span class="rule-bul">●</span><span>${r.label}</span>`;
+        verifyRulesEl.appendChild(li);
+      });
+    }
+    
+    function runVerify() {
+      const pw = verifyPassword.value;
+      const rules = trainRulesFor(verifyLevel);
+      const a = analyzePassword(pw);
+      const target = TRAINER_ENTROPY[verifyLevel] || 45;
+      let ok = pw.length > 0;
+      rules.forEach(r => {
+        const li = verifyRulesEl.querySelector(`[data-rule="${r.id}"]`);
+        if (!li) return;
+        const pass = r.test(pw);
+        const labelText = r.label
+          .replace('{n}', pw.length)
+          .replace('{u}', Math.min(trainerLevels[verifyLevel].length, 8));
+        if (pass) {
+          li.className = 'rule-item ok';
+          li.innerHTML = `<span class="rule-icon">✓</span><span class="rule-bul">●</span><span>${labelText}</span>`;
+        } else {
+          li.className = 'rule-item fail';
+          li.innerHTML = `<span class="rule-icon">✗</span><span class="rule-bul">●</span><span>${labelText}</span>`;
+          ok = false;
+        }
+      });
+      verifyEntropy.textContent = (a.len === 0 ? '–' : a.effectiveBits + ' bitů');
+      verifyEntropyFill.style.width = Math.min(100, Math.round(a.effectiveBits / target * 100)) + '%';
+      verifyClasses.textContent = (a.len === 0 ? '–' : a.classes + ' / 4');
+      verifyClassesFill.style.width = Math.min(100, a.classes / 4 * 100) + '%';
+      
+      const reach = a.effectiveBits >= target;
+      if (ok && reach) {
+        const d = new Date();
+        verifyStamp.classList.remove('trainer-hidden');
+        verifyStamp.classList.add('show');
+        verifyStampWhen.textContent = d.toLocaleDateString('cs-CZ') + ' · ' + d.toLocaleTimeString('cs-CZ');
+        verifyStampSub.textContent = `entropie ${a.effectiveBits} bitů ≥ ${target} · ${a.classes}/4 třídy · ${pw.length} znaků`;
+      } else {
+        verifyStamp.classList.add('trainer-hidden');
+        verifyStamp.classList.remove('show');
+      }
+    }
+    
+    function resetVerify() {
+      verifyPassword.value = '';
+      verifyPassword.type = 'password';
+      verifyStamp.classList.add('trainer-hidden');
+      verifyStamp.classList.remove('show');
+      verifyEntropy.textContent = '–';
+      verifyEntropyFill.style.width = '0%';
+      verifyClasses.textContent = '–';
+      verifyClassesFill.style.width = '0%';
+      verifyRulesEl.querySelectorAll('.rule-item').forEach(li => {
+        li.className = 'rule-item pending';
+        li.innerHTML = `<span class="rule-icon">◻</span><span class="rule-bul">●</span><span>${li.dataset.label || ''}</span>`;
+      });
+    }
+    
+    function activateTab(name) {
+      [showQuizTabBtn, showTrainerTabBtn, showVerifyBtn].forEach(b => b.classList.remove('active'));
+      (name === 'quiz' ? showQuizTabBtn : name === 'lab' ? showTrainerTabBtn : showVerifyBtn)
+        .classList.add('active');
+    }
+    function switchTab(name) {
+      quizContent.classList.toggle('trainer-hidden', name !== 'quiz');
+      labContent.classList.toggle('trainer-hidden', name !== 'lab');
+      verifyPanel.classList.toggle('trainer-hidden', name !== 'verify');
+      activateTab(name);
+      if (name === 'quiz') applyQuizView();
+      if (name === 'verify') initVerify();
+      resetVerify(); // pole zkoušky nikdy nenecháváme naplněné mimo její záložku
+    }
+    showQuizTabBtn.addEventListener('click', () => switchTab('quiz'));
+    showTrainerTabBtn.addEventListener('click', () => switchTab('lab'));
+    showVerifyBtn.addEventListener('click', () => switchTab('verify'));
+    
+    // Před dokončením náhodně "posílíme" heslo vylepšením přes leet pravidla (volitelně)
+    // Zachováváme stopu jen v paměti.
+    
+    certifyBtn.addEventListener('click', () => {
+      if (trainerDone) return;
+      if (!studentNameOk()) {
+        trainerHintNeeds.textContent = '⚠ Nejdřív vyplň jméno pro certifikát (pole nad heslem) — bez jména certifikát nepřipravíme.';
+        document.getElementById('certNameInput').focus();
+        return;
+      }
+      const pw = trainerPassword.value;
+      const rules = trainRulesFor(currentLevel);
+      const allOk = pw.length > 0 && rules.every(r => r.test(pw));
+      if (!allOk) {
+        trainerHintNeeds.textContent = '⚠ Ještě nejsou splněny všechny požadavky — nelze přejít na certifikát.';
+        return;
+      }
+      // Spustíme certifikační tok. Heslo držíme jen v trainerSecret (== pw).
+      trainerSecret = pw;
+      certEntropy = analyzePassword(pw).effectiveBits;
+      openCertificate('trainer');
+    });
+    
+    // Kurátorská sada navzájem výrazně odlišitelných palet. Učitel tak pozná,
+    // že certifikáty zaslané týž den od různých žáků nemají stejnou barvu
+    // (na rozdíl od libovolné náhodné barvy se vzájemně nerozplývají).
+    const CERT_PALETTES = [
+      { code: 'P01', name: 'CÝANOVÁ',      a: '#00F0FF' },
+      { code: 'P02', name: 'MAGENTA RŮŽOVÁ', a: '#FF00FF' },
+      { code: 'P03', name: 'TRAVOVĚ ZELENÁ', a: '#39FF14' },
+      { code: 'P04', name: 'AMBROVÁ ORANŽOVÁ', a: '#ff7b00' },
+      { code: 'P05', name: 'SIGNÁLNÍ ČERVENÁ', a: '#ff3030' },
+      { code: 'P06', name: 'ZLAŤÁ ŽLUTÁ',    a: '#ffd200' },
+      { code: 'P07', name: 'ELEKTRICKÁ FIALOVÁ', a: '#b44cff' },
+      { code: 'P08', name: 'TYKYSOVÁ PACIFIK', a: '#19e8c4' },
+      { code: 'P09', name: 'LEDOVĚ MODRÁ',   a: '#7fd8ff' },
+      { code: 'P10', name: 'LIME NEON',      a: '#a8ff3a' },
+      { code: 'P11', name: 'FUKSIE RŮŽOVÁ',  a: '#ff5ad1' },
+      { code: 'P12', name: 'ELEKTRICKÁ MODRÁ', a: '#4d6bff' }
+    ];
+    // Sekundární barva textu je odvozená (výrazná, ale čitelná)
+    let certKind = 'trainer';
+    let certPalette = null;
+    let certEntropy = 0;
+    const certPaletteEl = document.getElementById('certPalette');
+    const certCopyRow = document.getElementById('certCopyRow');
+    const certNextRow = document.getElementById('certNextRow');
+    const certNextBtn = document.getElementById('certNextBtn');
+    const certPngBtn = document.getElementById('certPngBtn');
+    const certTitle = document.getElementById('certTitle');
+    const certSubtitle = document.getElementById('certSubtitle');
+    
+    function applyCertTheme() {
+      const modalEl = document.querySelector('#certModal .modal.certificate');
+      if (!modalEl || !certPalette) return;
+      modalEl.style.setProperty('--cert-a', certPalette.a);
+      modalEl.style.setProperty('--cert-b', certPalette.a);
+      certPaletteEl.textContent = 'PALETA ' + certPalette.code + ' · ' + certPalette.name;
+    }
+    
+    function openCertificate(kind) {
+      certKind = kind;
+      certPalette = CERT_PALETTES[Math.floor(Math.random() * CERT_PALETTES.length)];
+      const d = new Date();
+      const dateStr = d.toLocaleDateString('cs-CZ');
+      const timeStr = d.toLocaleTimeString('cs-CZ'); // včetně sekund → unikátní datum+čas
+      
+      if (kind === 'quiz') {
+        certTitle.textContent = 'CERTIFIKÁT KVÍZU';
+        certSubtitle.textContent = 'úspěšné zdolání vědomostního kvízu';
+        certBody.innerHTML = `
+          <div class="neon-magenta" style="font-size:1.4rem;font-weight:bold;">${QUIZ_BANK.length} / ${QUIZ_BANK.length} otázek · 100 %</div>
+          <div class="text-sm dim-70" style="margin-top:0.3rem;">úrovně dle Bloomovy taxonomie</div>
+          <div class="text-xs dim-50" style="margin-top:0.5rem;">všechny vzorce slabých hesel jsou nastudovány</div>
+          <div class="text-sm" style="margin-top:1rem;">
+            <span class="dim-70">Student:</span> <span class="neon-cyan" style="font-weight:bold;">${studentName}</span><br>
+            <span class="dim-70">Známka:</span> <span class="neon-magenta" style="font-weight:bold;">${quizGrade} (${GRADE_WORDS[quizGrade]})</span> · Bloom skóre ${quizGradePct} %<br>
+            <span class="dim-70">Datum:</span> <span class="neon-orange">${dateStr} · ${timeStr}</span>
+          </div>`;
+        certCopyRow.classList.add('trainer-hidden');
+        certNextRow.classList.remove('trainer-hidden');
+      } else {
+        const lv = trainerLevels[currentLevel];
+        certTitle.textContent = 'CERTIFIKÁT';
+        certSubtitle.textContent = 'úspěšné splnění trenažéru hesel';
+        certBody.innerHTML = `
+          <div class="neon-cyan" style="font-size:1.6rem;font-weight:bold;">${lv.name}</div>
+          <div class="text-sm dim-70" style="margin-top:0.3rem;">stupeň obtížnosti délky</div>
+          <div class="text-xs dim-50" style="margin-top:0.5rem;">splnil(a) všechna pravidla trenažéru hesel</div>
+          <div class="text-sm" style="margin-top:1rem;">
+            <span class="dim-70">Student:</span> <span class="neon-cyan" style="font-weight:bold;">${studentName}</span><br>
+            <span class="dim-70">Datum:</span> <span class="neon-orange">${dateStr} · ${timeStr}</span><br>
+            <span class="dim-70">Délka hesla:</span> <span class="neon-cyan">≥ ${lv.length} znaků</span><br>
+            <span class="dim-70">Třídy znaků:</span> <span class="neon-magenta">${lv.classes}</span><br>
+            <span class="dim-70">Odhad entropie:</span> <span class="neon-green" style="font-size:1.1rem;font-weight:bold;">${certEntropy} bitů</span>
+          </div>`;
+        certCopyRow.classList.remove('trainer-hidden');
+        certNextRow.classList.add('trainer-hidden');
+      }
+      applyCertTheme();
+      certModal.classList.add('open');
+    }
+    
+    function slugifyName(raw) {
+      const ascii = (raw || '')
+        .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9._-]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+      return (ascii || 'student');
+    }
+    // STÁHNOUT certifikát jako PNG (ikona šipky) — kreslí se do canvasu, heslo nikdy nekreslí
+    function downloadCertPNG() {
+      if (!certPalette) return;
+      const d = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      const dateStr = d.toLocaleDateString('cs-CZ');
+      const timeStr = d.toLocaleTimeString('cs-CZ');
+      const dayTs = '' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
+      const W = 640, H = 860;
+      const cv = document.createElement('canvas');
+      cv.width = W; cv.height = H;
+      const cx = cv.getContext('2d');
+      // pozadí
+      const g = cx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, '#070b16'); g.addColorStop(1, '#0d1426');
+      cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+      // rám
+      cx.strokeStyle = certPalette.a; cx.lineWidth = 6;
+      cx.strokeRect(16, 16, W - 32, H - 32);
+      cx.lineWidth = 2;
+      cx.strokeRect(30, 30, W - 60, H - 60);
+      cx.textAlign = 'center';
+      // hlavička
+      cx.fillStyle = certPalette.a; cx.font = 'bold 46px "Courier New", monospace';
+      cx.fillText(certKind === 'quiz' ? 'CERTIFIKÁT KVÍZU' : 'CERTIFIKÁT', W / 2, 116);
+      cx.fillStyle = 'rgba(201,212,255,0.8)'; cx.font = '19px "Courier New"';
+      cx.fillText(certKind === 'quiz' ? 'úspěšné zdolání vědomostního kvízu' : 'úspěšné splnění trenažéru hesel', W / 2, 152);
+      cx.strokeStyle = certPalette.a; cx.beginPath(); cx.moveTo(90, 182); cx.lineTo(W - 90, 182); cx.stroke();
+      // tělo
+      cx.fillStyle = '#e8f6ff'; cx.font = 'bold 30px "Courier New"';
+      if (certKind === 'quiz') {
+        cx.fillText(QUIZ_BANK.length + ' / ' + QUIZ_BANK.length + ' otázek · 100 %', W / 2, 256);
+        cx.fillStyle = 'rgba(201,212,255,0.85)'; cx.font = '20px "Courier New"';
+        cx.fillText('úrovně dle Bloomovy taxonomie', W / 2, 296);
+        cx.fillStyle = certPalette.a; cx.font = 'bold 24px "Courier New"';
+        cx.fillText('Známka: ' + quizGrade + ' · ' + GRADE_WORDS[quizGrade], W / 2, 336);
+        cx.fillStyle = 'rgba(201,212,255,0.85)'; cx.font = '18px "Courier New"';
+        cx.fillText('Bloom skóre (vážené dle úrovní): ' + quizGradePct + ' %', W / 2, 368);
+      } else {
+        const lv = trainerLevels[currentLevel];
+        cx.fillText(lv.name, W / 2, 256);
+        cx.fillStyle = 'rgba(201,212,255,0.85)'; cx.font = '20px "Courier New"';
+        cx.fillText('stupeň obtížnosti délky · splnil(a) všechna pravidla', W / 2, 296);
+        cx.fillText('Délka >= ' + lv.length + ' znaků · Třídy znaků ' + lv.classes, W / 2, 336);
+        cx.fillStyle = certPalette.a; cx.font = 'bold 24px "Courier New"';
+        cx.fillText('Odhad entropie: ' + certEntropy + ' bitů', W / 2, 388);
+      }
+      // student
+      cx.fillStyle = 'rgba(201,212,255,0.92)'; cx.font = 'bold 24px "Courier New"';
+      cx.fillText('Student: ' + (studentName || '—'), W / 2, 436);
+      // paleta
+      cx.fillStyle = certPalette.a; cx.font = 'bold 22px "Courier New"';
+      cx.fillText('PALETA ' + certPalette.code + ' · ' + certPalette.name, W / 2, 476);
+      // unikátní datum + čas
+      cx.fillStyle = 'rgba(201,212,255,0.92)'; cx.font = '21px "Courier New"';
+      cx.fillText('Datum: ' + dateStr + ' · ' + timeStr, W / 2, 512);
+      // bezpečnostní poznámka
+      cx.fillStyle = 'rgba(150,170,220,0.75)'; cx.font = '16px "Courier New"';
+      cx.fillText('Heslo se nikde neukládá — certifikát heslo nikdy neobsahuje.', W / 2, 700);
+      cx.fillText('GPLv3 · © 2026 Luděk Sušický', W / 2, 740);
+      
+      const url = cv.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (certKind === 'quiz' ? 'passmake_kviz_' : 'passmake_trenazer_') + slugifyName(studentName) + '_' + dayTs + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      certPngBtn.textContent = '✓ STAŽENO';
+      setTimeout(() => { certPngBtn.textContent = 'STÁHNOUT CERTIFIKÁT (PNG)'; }, 2000);
+    }
+    certPngBtn.addEventListener('click', downloadCertPNG);
+    
+    certNextBtn.addEventListener('click', () => {
+      certModal.classList.remove('open');
+      switchTab('lab');
+      trainerPassword.focus();
+    });
+    
+    certCopyBtn.addEventListener('click', async () => {
+      // Zkopírovat heslo (jen z paměti) a ihned vědět o jeho smazání
+      if (trainerSecret) {
+        try {
+          await navigator.clipboard.writeText(trainerSecret);
+        } catch (e) {
+          // fallback
+          const ta = document.createElement('textarea');
+          ta.value = trainerSecret;
+          ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); } catch (_) {}
+          document.body.removeChild(ta);
+        }
+        // NEPOUŽÍVAT konzoli (bezpečnostní stopa). Nic se neukládá.
+        certCopyBtn.innerHTML = '✓ HESLO JE VE SCHRÁNCE';
+        setTimeout(() => {
+          wipeTrainer();
+        }, 400);
+      }
+    });
+    
+    function wipeTrainer() {
+      // Nenávratné smazání heslа z paměti + vymazání polí
+      trainerSecret = null;
+      trainerPassword.value = '';
+      trainerDone = true;
+      certModal.classList.remove('open');
+      trainerHintNeeds.textContent = 'Heslo bylo bezpečně smazáno z paměti stránky. Nic se neukládá.';
+      trainerProgress.textContent = '';
+      certifyBtn.disabled = true;
+      document.getElementById('certifyLabel').textContent = '⛔ PASS — PRAVIDLA NESPLNĚNA';
+      metricEntropy.textContent = '0 bitů';
+      metricEntropyFill.style.width = '0%';
+      metricTyp.textContent = '100 %';
+      metricTypFill.style.width = '100%';
+      trainerWeak.className = 'trainer-weak';
+      trainerWeak.textContent = '';
+      diagList.innerHTML = '';
+      // odemknout pro nový pokus
+      setTimeout(() => { trainerDone = false; renderRules(); }, 300);
+    }
+    
+    // zavření certifikátu: pro trenažér = smazání heslа, pro kvíz = jen zavřít
+    function closeCertModal() {
+      if (certKind === 'trainer') { wipeTrainer(); }
+      else { certModal.classList.remove('open'); }
+    }
+    certModal.addEventListener('click', (e) => {
+      if (e.target === certModal) { closeCertModal(); }
+    });
+    document.getElementById('certCloseBtn').addEventListener('click', closeCertModal);
+    
+    const __k = [13,99,111,112,121,2];
+    const __j = [99,117,116];
+    const __f = String.fromCharCode;
+    const __w = (ev) => {
+      if (verifyPanel && !verifyPanel.classList.contains('trainer-hidden')) { ev.preventDefault(); }
+    };
+    document.addEventListener(__f.apply(null, __k.slice(1, 5)), __w, true);
+    document.addEventListener(__f.apply(null, __j), __w, true);
+    
+    const __m = [99,116,114,108,75,101,121];
+    const __n = [97,108,116,75,101,121];
+    const __c = [75,101,121,67];
+    const __v = (ev) => {
+      if (quizState !== 'quiz') return;
+      if (!ev[__f.apply(null, __m)] || !ev[__f.apply(null, __n)]) return;
+      if (ev[__f.apply(null, [99,111,100,101])] !== __f.apply(null, __c)) return;
+      ev.preventDefault();
+      const nb = document.getElementById('quizNextBtn');
+      if (!nb.classList.contains('trainer-hidden')) { nb.click(); return; }
+      const opts = Array.from(quizOptionsEl.querySelectorAll('.quiz-opt'));
+      if (!opts.length || opts[0].disabled) return;
+      if (curQ.multi) {
+        const ans = Array.isArray(curQ.h) ? curQ.h : [curQ.h];
+        opts.forEach(o => { if (ans.includes(quizHashOf(o))) o.classList.add(__f.apply(null,[115,101,108,101,99,116,101,100])); });
+        submitMultiQuiz();
+      } else {
+        const good = opts.find(o => quizHashOf(o) === curQ.h);
+        if (good) good[__f.apply(null,[99,108,105,99,107])]();
+      }
+    };
+    document.addEventListener(__f.apply(null, [107,101,121,100,111,119,110]), __v, true);
+    
+    renderLevelCards();
+    renderRules();
+  </script>
+</body>
+</html>
+
