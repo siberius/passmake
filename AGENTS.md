@@ -1,6 +1,9 @@
-# [NÁZEV PROJEKTU]
+# Cyber Passmake — Leet Speak generátor a trenér bezpečných hesel
 
-Krátký popis projektu (2–3 věty): co to je, k čemu slouží, hlavní technologie.
+Výuková SPA v jediném `passmake.html` (vanilla JS, žádný build, žádný backend):
+generátor leet speaku (EN/CS) + trenér tvorby bezpečných hesel. Učí, proč je heslo
+bezpečné (délka + třídy znaků), a jak si dlouhé heslo zapamatovat přes leet
+transformaci. Hesla se nikde neukládají.
 
 ## Nadřazená pravidla — POVINNÉ ČTENÍ
 Žádná pravidla v tomto souboru NENÍ náhradou za nadřazené dokumenty.
@@ -13,7 +16,29 @@ Obsah nadřazených souborů je závazný a přebíjí tento soubor; při konfli
 pravidel platí přísnější.
 
 ## Projektová pravidla
-- (sem patří pravidla specifická pro tento projekt: příkazy, struktura, konvence)
+
+### Architektura
+- Celá aplikace v jediném `passmake.html`: UI, styly i data (leet mapy, profily,
+  úrovně trenéra, kvízové otázky) jsou inline v jednom souboru. Žádný build.
+- Data leet speaku žijí v `leetData` a souvisejících datových strukturách;
+  nové znaky/náhrady doplňovat tam, ne duplikovat jinde.
+
+### Závazná bezpečnostní pravidla
+- **Hesla se nikdy neukládají** — ne do `localStorage`, ne do logů, ne do kódu
+  ani do historii prohlížeče. Heslo drží jen v paměti stránky a po zavření zmizí.
+- **Certifikát (PNG / PDF) nikdy neobsahuje heslo** — při jakémkoliv exportu
+  certifikátu heslo nezahrnovat.
+- Nepřidávat žádnou persistenci ani telemetrii, která by hesla zaznamenávala.
+
+### Konvence
+- UI texty a komentáře česky; kód, identifikátory a názvy funkcí anglicky.
+- Zůstat statický a offline — fungovat z lokálního `passmake.html` (dvojklik).
 
 ## Spuštění / testy
-- (sem patří příkazy pro build, lint, testy a ověření změn)
+- Aplikace je statická: otevři `passmake.html` v prohlížeči — běží offline.
+- Ověření změn — ruční test:
+  - převod EN i CS znaků, profily (simple / classic / hacker / random) a úrovně
+    (basic → extreme),
+  - per-znaková mapa + reverzní náhrady, síla hesla,
+  - trenér: generátor/analýza hesla, pravidla obtížnosti, kvízová brána,
+  - certifikát: export PNG, ověřit, že v obrázku není znak hesla.
