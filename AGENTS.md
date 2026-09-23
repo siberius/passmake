@@ -10,8 +10,8 @@ transformaci. Hesla se nikde neukládají.
 Před jakýmkoliv rozhodováním nebo první úpravou přečti:
 1. `/home/lu/Dokumenty/aicoding/MASTER-AGENTS.md` — centrální dashboard (mapa projektů,
    seznam hlavních MD souborů, globální pravidla pro všechny projekty).
-2. `/home/lu/Dokumenty/aicoding/REFLECT-AUDIT.md` — procesní audit, kterým se
-   řídíme od 2026-09-06 (mód „reflect-audit“).
+2. `/home/lu/Dokumenty/aicoding/governance/REFLECT-AUDIT.md` — procesní audit,
+   kterým se řídíme od 2026-09-06 (mód „reflect-audit“).
 Obsah nadřazených souborů je závazný a přebíjí tento soubor; při konfliktu
 pravidel platí přísnější.
 
