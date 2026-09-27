@@ -24,8 +24,7 @@ MIT — viz soubor `LICENSE`.
 
 ## Autor
 
-Luděk Sušický — SŠ a VŠ učitel informatiky zabývající se AI ve vzdělávání
-a vibecodingem.
+Luděk Sušický — biolog, středoškolský a vysokoškolský učitel informatických předmětů.
 
 ## Repozitář
 
