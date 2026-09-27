@@ -1,5 +1,8 @@
 # finished.md — passmake
 
+## 2026-09-27 — LICENSE: doložka o AI anglicky (commit `ff11105`, push origin main)
+- Česká „Poznámka k autorství" přeložena do angličtiny („Authorship note: Generative AI tools were used…").
+
 ## 2026-09-27 — LICENSE: doložka o generativní AI (commit `786857b`, push origin main)
 - `LICENSE` doplněna o českou doložku: při vývoji byly využity nástroje generativní AI; návrh výukového obsahu, úpravy a odpovědnost za výslednou podobu náleží autorovi.
 
