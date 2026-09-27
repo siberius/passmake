@@ -1,2 +1,5 @@
 node_modules/
 *.log
+
+# Lokální testy a dokumentace (neuploaduje se na GitHub)
+testing/
