@@ -24,7 +24,7 @@ MIT — viz soubor `LICENSE`.
 
 ## Autor
 
-Luděk Sušický — biolog, středoškolský a vysokoškolský učitel informatických předmětů.
+Luděk Sušický — biolog, středoškolský a vysokoškolský učitel informatických předmětů
 
 ## Repozitář
 

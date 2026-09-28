@@ -1,5 +1,9 @@
 # finished.md — passmake
 
+## 2026-09-28 — Bio bez koncové tečky (nezakomitováno)
+- `passmake.html` (Kredit) + `README.md`: popisek „biolog, středoškolský a vysokoškolský učitel informatických předmětů" bez tečky na konci (master pravidlo); zrcadleno do `school/passmake.html`.
+- Ověření: cílená kontrola řádků + shoda zrcadel (`diff -q`); FTP upload na `vibemaker.cz/school/`.
+
 ## 2026-09-27 — LICENSE: doložka o AI anglicky (commit `ff11105`, push origin main)
 - Česká „Poznámka k autorství" přeložena do angličtiny („Authorship note: Generative AI tools were used…").
 
