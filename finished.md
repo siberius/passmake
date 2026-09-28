@@ -1,6 +1,6 @@
 # finished.md — passmake
 
-## 2026-09-28 — Bio bez koncové tečky (nezakomitováno)
+## 2026-09-28 — Bio bez koncové tečky (commit `8957e1d`, auto-backup 10:30)
 - `passmake.html` (Kredit) + `README.md`: popisek „biolog, středoškolský a vysokoškolský učitel informatických předmětů" bez tečky na konci (master pravidlo); zrcadleno do `school/passmake.html`.
 - Ověření: cílená kontrola řádků + shoda zrcadel (`diff -q`); FTP upload na `vibemaker.cz/school/`.
 
