@@ -735,7 +735,7 @@
             <p style="margin-top:0.6rem;"><span class="neon-orange" style="font-weight:bold;">Trenažér = mechanika zxcvbn.</span>
               Odhalí v heslu <em>vzory</em> a <em>slabiny</em>: slova ze slovníků (čeština + angličtina),
               častá hesla, procházky po klávesnici, sekvence, opakování a data. Potom spočítá
-              <span class="neon-green" style="font-weight:bold;">efektivní entropii</span> reálnou sílu
+              <span class="neon-green" style="font-weight:bold;">efektivní entropii</span>: reálnou sílu
               tak, jak ji vidí cracker. Přitom používá stejné principy jako knihovna
               <span class="neon-cyan" style="font-weight:bold;">zxcvbn</span> z Dropboxu.</p>
             <p style="margin-top:0.6rem;"><span class="neon-magenta" style="font-weight:bold;">Kvíz = samostatná záložka.</span>
@@ -759,7 +759,7 @@
               <a class="neon-cyan" href="https://x.com/ludeksusicky" target="_blank" rel="noopener">@ludeksusicky</a></p>
             <p class="kredit-row"><span class="opacity-50">LinkedIn:</span>
               <a class="neon-cyan" href="https://www.linkedin.com/in/ludek-susicky" target="_blank" rel="noopener">linkedin.com/in/ludek-susicky</a></p>
-            <p style="margin-top:0.8rem;">Aplikace je příkladem <span class="neon-green" style="font-weight:bold;">SPA (single-page application)</span> vše v jediném souboru HTML, vytvořené v <span class="neon-cyan" style="font-weight:bold;">Antigravity Google Gemini 3.1 Pro</span>. Asistence: <span class="neon-orange" style="font-weight:bold;">Big Pickle</span> (AI, opencode).</p>
+            <p style="margin-top:0.8rem;">Aplikace je příkladem <span class="neon-green" style="font-weight:bold;">SPA (single-page application)</span>: vše v jediném souboru HTML, vytvořené v <span class="neon-cyan" style="font-weight:bold;">Antigravity Google Gemini 3.1 Pro</span>. Asistence: <span class="neon-orange" style="font-weight:bold;">Big Pickle</span> (AI, opencode).</p>
             <p class="kredit-row" style="margin-top:0.8rem;">
               <span class="opacity-50">Verze:</span> Gemini Pro 3.1 + Big Pickle<br>
               <span class="opacity-50">Licence:</span> <span class="neon-green" style="font-weight:bold;">GPLv3 · Copyright © 2026 Luděk Sušický</span>
@@ -940,9 +940,9 @@
             <div style="font-size:1.15rem; font-weight:bold;" id="quizDoneHeadline">✓ KVÍZ DOKONČEN</div>
             
             <div style="margin:0.8rem 0 0.3rem;">
-              <div class="quiz-grade-num neon-magenta" id="quizGradeNum"></div>
-              <div class="text-sm" id="quizGradeWord"></div>
-              <div class="text-xs dim-60" style="margin-top:0.2rem;" id="quizGradePct"></div>
+              <div class="quiz-grade-num neon-magenta" id="quizGradeNum">–</div>
+              <div class="text-sm" id="quizGradeWord">–</div>
+              <div class="text-xs dim-60" style="margin-top:0.2rem;" id="quizGradePct">–</div>
             </div>
             <div class="text-sm dim-70" style="line-height:1.6; margin-bottom:0.6rem; font-size:0.85rem;" id="quizBloomReport"></div>
             
@@ -960,8 +960,8 @@
             <!-- známka 3–5: doporučení + opakování, certifikát se nenabízí -->
             <div id="quizFailArea" style="display:none;">
               <p class="text-sm" style="line-height:1.6; margin:0.4rem 0 1rem; color:#ffb3a0;">
-                Tentokrát to nevyšlo nejlépe (známka <b id="quizFailGrade"></b>). Certifikát dostaneš až za výsledek
-                <span class="neon-green" style="font-weight:bold;">1–2</span> projdi si prosím vysvětlení u špatných
+                Tentokrát to nevyšlo nejlépe (známka <b id="quizFailGrade">–</b>). Certifikát dostaneš až za výsledek
+                <span class="neon-green" style="font-weight:bold;">1–2</span>: projdi si prosím vysvětlení u špatných
                 odpovědí a zkus kvíz znovu. Můžeš opakovat, dokud se nevylepšíš.
               </p>
               <div style="display:grid; gap:10px;">
@@ -1038,7 +1038,7 @@
           <h3 class="neon-cyan mb-2">OVĚŘENÍ ZNALOSTI · ZKOUŠKA</h3>
           <p class="text-sm dim-70" style="line-height:1.6; margin-bottom:1rem;">
             Přetvoř znovu silné heslo (např. totéž jako na certifikátu). Pole je
-            <b class="neon-magenta">skryté: hvězdičky</b> a nic se nikam neukládá.
+            <b class="neon-magenta">skryté: hvězdičky</b>: a nic se nikam neukládá.
             Zobrazí se jen objektivní údaje; když heslo projde pravidly i hranicí entropie,
             dostane razítko <span class="neon-green">OVĚŘENO</span> k zápisu učiteli.
           </p>
@@ -1049,7 +1049,7 @@
             </div>
             <div class="text-sm dim-70" style="align-self:end; padding-bottom:0.45rem;">
               <span class="opacity-50">Požadavek entropie:</span>
-              <span class="neon-cyan" id="verifyTarget"></span>
+              <span class="neon-cyan" id="verifyTarget">–</span>
             </div>
           </div>
           <div class="trainer-password-row">
@@ -1064,11 +1064,11 @@
           <ul class="rule-list" id="verifyRules" style="margin-top:0.8rem;"></ul>
           <div class="trainer-metrics" id="verifyMetrics">
             <div class="metric m-cyan">
-              <div class="m-label"><span>ENTROPIE</span><span class="m-value neon-cyan" id="verifyEntropy"></span></div>
+              <div class="m-label"><span>ENTROPIE</span><span class="m-value neon-cyan" id="verifyEntropy">–</span></div>
               <div class="m-track"><div class="m-fill" id="verifyEntropyFill"></div></div>
             </div>
             <div class="metric m-orange">
-              <div class="m-label"><span>TŘÍDY ZNAKŮ</span><span class="m-value neon-orange" id="verifyClasses"></span></div>
+              <div class="m-label"><span>TŘÍDY ZNAKŮ</span><span class="m-value neon-orange" id="verifyClasses">–</span></div>
               <div class="m-track"><div class="m-fill" id="verifyClassesFill"></div></div>
             </div>
           </div>
@@ -2681,7 +2681,7 @@
     
     renderLevelCards();
     renderRules();
-  </script>``
+  </script>`
 </body>
 </html>
 
