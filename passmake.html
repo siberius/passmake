@@ -731,11 +731,11 @@
           <div class="about-body">
             <p><span class="neon-cyan" style="font-weight:bold;">Kódování a leet speak.</span>
               Počítač si text nepamatuje „znaky“, ale <em>kódy</em> (čísla). Leet speak je záměrné
-              pře-kódování: stejný obsah jinými znaky: <span class="neon-magenta">a → 4, e → 3, o → 0</span>.</p>
+              pře-kódování: stejný obsah jinými znaky, <span class="neon-magenta">a → 4, e → 3, o → 0</span>.</p>
             <p style="margin-top:0.6rem;"><span class="neon-orange" style="font-weight:bold;">Trenažér = mechanika zxcvbn.</span>
               Odhalí v heslu <em>vzory</em> a <em>slabiny</em>: slova ze slovníků (čeština + angličtina),
               častá hesla, procházky po klávesnici, sekvence, opakování a data. Potom spočítá
-              <span class="neon-green" style="font-weight:bold;">efektivní entropii</span>reálnou sílu
+              <span class="neon-green" style="font-weight:bold;">efektivní entropii</span> reálnou sílu
               tak, jak ji vidí cracker. Přitom používá stejné principy jako knihovna
               <span class="neon-cyan" style="font-weight:bold;">zxcvbn</span> z Dropboxu.</p>
             <p style="margin-top:0.6rem;"><span class="neon-magenta" style="font-weight:bold;">Kvíz = samostatná záložka.</span>
@@ -759,7 +759,7 @@
               <a class="neon-cyan" href="https://x.com/ludeksusicky" target="_blank" rel="noopener">@ludeksusicky</a></p>
             <p class="kredit-row"><span class="opacity-50">LinkedIn:</span>
               <a class="neon-cyan" href="https://www.linkedin.com/in/ludek-susicky" target="_blank" rel="noopener">linkedin.com/in/ludek-susicky</a></p>
-            <p style="margin-top:0.8rem;">Aplikace je příkladem <span class="neon-green" style="font-weight:bold;">SPA (single-page application)</span>vše v jediném souboru HTML, vytvořené v <span class="neon-cyan" style="font-weight:bold;">Antigravity Google Gemini 3.1 Pro</span>. Asistence: <span class="neon-orange" style="font-weight:bold;">Big Pickle</span> (AI, opencode).</p>
+            <p style="margin-top:0.8rem;">Aplikace je příkladem <span class="neon-green" style="font-weight:bold;">SPA (single-page application)</span> vše v jediném souboru HTML, vytvořené v <span class="neon-cyan" style="font-weight:bold;">Antigravity Google Gemini 3.1 Pro</span>. Asistence: <span class="neon-orange" style="font-weight:bold;">Big Pickle</span> (AI, opencode).</p>
             <p class="kredit-row" style="margin-top:0.8rem;">
               <span class="opacity-50">Verze:</span> Gemini Pro 3.1 + Big Pickle<br>
               <span class="opacity-50">Licence:</span> <span class="neon-green" style="font-weight:bold;">GPLv3 · Copyright © 2026 Luděk Sušický</span>
@@ -789,7 +789,7 @@
             <line x1="8" y1="16" x2="16" y2="16"/>
           </svg>
           VSTUPNÍ TEXT
-          <span class="ctrl-hint" tabindex="0" data-tip="Sem napiš nebo vlož text, který se převede do leetspeaku (např. slovo, heslo, frázi).&nbsp;&nbsp;Znaky můžeš prohazovat — klikáš ve ZNAKOVÉ MAPĚ a každý znak vystřídáš za jinou variantu.">
+          <span class="ctrl-hint" tabindex="0" data-tip="Sem napiš nebo vlož text, který se převede do leetspeaku (např. slovo, heslo, frázi).&nbsp;&nbsp;Znaky můžeš prohazovat: klikáš ve ZNAKOVÉ MAPĚ a každý znak vystřídáš za jinou variantu.">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
           </span>
         </label>
@@ -940,9 +940,9 @@
             <div style="font-size:1.15rem; font-weight:bold;" id="quizDoneHeadline">✓ KVÍZ DOKONČEN</div>
             
             <div style="margin:0.8rem 0 0.3rem;">
-              <div class="quiz-grade-num neon-magenta" id="quizGradeNum">–</div>
-              <div class="text-sm" id="quizGradeWord">–</div>
-              <div class="text-xs dim-60" style="margin-top:0.2rem;" id="quizGradePct">–</div>
+              <div class="quiz-grade-num neon-magenta" id="quizGradeNum"></div>
+              <div class="text-sm" id="quizGradeWord"></div>
+              <div class="text-xs dim-60" style="margin-top:0.2rem;" id="quizGradePct"></div>
             </div>
             <div class="text-sm dim-70" style="line-height:1.6; margin-bottom:0.6rem; font-size:0.85rem;" id="quizBloomReport"></div>
             
@@ -960,8 +960,8 @@
             <!-- známka 3–5: doporučení + opakování, certifikát se nenabízí -->
             <div id="quizFailArea" style="display:none;">
               <p class="text-sm" style="line-height:1.6; margin:0.4rem 0 1rem; color:#ffb3a0;">
-                Tentokrát to nevyšlo nejlépe (známka <b id="quizFailGrade">–</b>). Certifikát dostaneš až za výsledek
-                <span class="neon-green" style="font-weight:bold;">1–2</span>projdi si prosím vysvětlení u špatných
+                Tentokrát to nevyšlo nejlépe (známka <b id="quizFailGrade"></b>). Certifikát dostaneš až za výsledek
+                <span class="neon-green" style="font-weight:bold;">1–2</span> projdi si prosím vysvětlení u špatných
                 odpovědí a zkus kvíz znovu. Můžeš opakovat, dokud se nevylepšíš.
               </p>
               <div style="display:grid; gap:10px;">
@@ -990,7 +990,7 @@
           <label class="name-label" for="certNameInput">Jméno pro certifikát (z kvízu se doplní samo, jinak vyplň):</label>
           <input type="text" class="cyber-input" id="certNameInput" maxlength="60" placeholder="Jméno / značka pro certifikát" autocomplete="off" autocapitalize="off" spellcheck="false">
           <div class="trainer-password-row" style="margin-top:0.6rem;">
-            <input type="text" class="cyber-input trainer-pw" id="trainerPassword" placeholder="Vytvoř ideální heslo: program okamžitě prozkoumá jeho kvalitu" autocomplete="off" autocapitalize="off" spellcheck="false">
+            <input type="text" class="cyber-input trainer-pw" id="trainerPassword" placeholder="Vytvoř ideální heslo, program okamžitě prozkoumá jeho kvalitu" autocomplete="off" autocapitalize="off" spellcheck="false">
             <button class="pw-toggle" id="pwToggle" title="Skrýt zobrazení" style="color:var(--neon-cyan);" aria-label="Skrýt zobrazení hesla">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -1038,7 +1038,7 @@
           <h3 class="neon-cyan mb-2">OVĚŘENÍ ZNALOSTI · ZKOUŠKA</h3>
           <p class="text-sm dim-70" style="line-height:1.6; margin-bottom:1rem;">
             Přetvoř znovu silné heslo (např. totéž jako na certifikátu). Pole je
-            <b class="neon-magenta">skryté: hvězdičky</b>a nic se nikam neukládá.
+            <b class="neon-magenta">skryté: hvězdičky</b> a nic se nikam neukládá.
             Zobrazí se jen objektivní údaje; když heslo projde pravidly i hranicí entropie,
             dostane razítko <span class="neon-green">OVĚŘENO</span> k zápisu učiteli.
           </p>
@@ -1049,7 +1049,7 @@
             </div>
             <div class="text-sm dim-70" style="align-self:end; padding-bottom:0.45rem;">
               <span class="opacity-50">Požadavek entropie:</span>
-              <span class="neon-cyan" id="verifyTarget">–</span>
+              <span class="neon-cyan" id="verifyTarget"></span>
             </div>
           </div>
           <div class="trainer-password-row">
@@ -1064,11 +1064,11 @@
           <ul class="rule-list" id="verifyRules" style="margin-top:0.8rem;"></ul>
           <div class="trainer-metrics" id="verifyMetrics">
             <div class="metric m-cyan">
-              <div class="m-label"><span>ENTROPIE</span><span class="m-value neon-cyan" id="verifyEntropy">–</span></div>
+              <div class="m-label"><span>ENTROPIE</span><span class="m-value neon-cyan" id="verifyEntropy"></span></div>
               <div class="m-track"><div class="m-fill" id="verifyEntropyFill"></div></div>
             </div>
             <div class="metric m-orange">
-              <div class="m-label"><span>TŘÍDY ZNAKŮ</span><span class="m-value neon-orange" id="verifyClasses">–</span></div>
+              <div class="m-label"><span>TŘÍDY ZNAKŮ</span><span class="m-value neon-orange" id="verifyClasses"></span></div>
               <div class="m-track"><div class="m-fill" id="verifyClassesFill"></div></div>
             </div>
           </div>
@@ -1528,16 +1528,16 @@
     const quizDoneBox = document.getElementById('quizDoneBox');
     
     const INTRO_PANELS = [
-      { t: 'NEJDŘÍV SE PŘEDSTAV — KVÍZ BEZ JMÉNA NESPUSTÍŠ',
+      { t: 'NEJDŘÍV SE PŘEDSTAV: KVÍZ BEZ JMÉNA NESPUSTÍŠ',
         html: '<p>Jméno použijeme v <b class="neon-green">certifikátu kvízu i trenažéru</b> a do názvu staženého obrázku (formát <span class="neon-cyan">passmake_kviz_jméno_datum</span> / <span class="neon-cyan">passmake_trenažer_jméno_datum</span>). Bez vyplněného jména se kvíz neotevře.</p>'
           + '<label class="name-label" for="quizNameInput">Tvoje jméno (jak ho chceš vidět na certifikátu):</label>'
           + '<input type="text" class="cyber-input" id="quizNameInput" maxlength="60" placeholder="Napiš své jméno nebo značku" autocomplete="off" autocapitalize="off" spellcheck="false">'
-          + '<p class="text-xs neon-orange trainer-hidden" id="quizNameError" style="margin-top:0.5rem;">⚠ Nejdřív napiš své jméno — bez něj kvíz nepokračuje.</p>' },
-      { t: 'SÍLA HESLA = DÉLKA + TŘÍDY', html: '<p>Heslo je bezpečné, když je <b class="neon-cyan">dlouhé</b> a používá víc <b class="neon-magenta">druhů znaků</b> (malá, velká, číslice, symboly). Každý znak navíc znásobí počet možných kombinací — útočník jich pak musí vyzkoušet nereálně mnoho.</p>' },
+          + '<p class="text-xs neon-orange trainer-hidden" id="quizNameError" style="margin-top:0.5rem;">⚠ Nejdřív napiš své jméno, bez něj kvíz nepokračuje.</p>' },
+      { t: 'SÍLA HESLA = DÉLKA + TŘÍDY', html: '<p>Heslo je bezpečné, když je <b class="neon-cyan">dlouhé</b> a používá víc <b class="neon-magenta">druhů znaků</b> (malá, velká, číslice, symboly). Každý znak navíc znásobí počet možných kombinací: útočník jich pak musí vyzkoušet nereálně mnoho.</p>' },
       { t: 'VZORY JSOU SLABINY', html: '<p>Crackery nezkouší znaky od AAAAA. Dnešní nástroje rozkládají heslo na <b class="neon-orange">vzory</b>: běžná slova ze slovníků (čeština i angličtina), častá hesla, chůzi po klávesnici (qwerty), sekvence (123), opakování (aaaaa) a data. Proto „kočka“ neochrání nic.</p>' },
-      { t: 'LEETS PEAK SÁM NEZACHRÁNÍ', html: '<p>Leetspeak (<b class="neon-magenta">a→4, e→3, o→0</b>) jen změní vzhled hesla a pomůže si ho zapamatovat. Každý cracker zná leet tabulku — <b class="neon-orange">sám bezpečnost téměř nezvyšuje</b>. Opravdová síla je v délce a nepředvídatelném složení.</p>' },
-      { t: 'OVĚŘUJEME JAKO zxcvbn', html: '<p>Trenažér používá <b class="neon-cyan">mechaniku knihovny zxcvbn</b> (Dropbox): heslo rozloží na vzory, pozná leet, klávesnici, sekvence i data a spočítá <b class="neon-green">efektivní entropii</b>. Vše běží lokálně — heslo se nikam nezaznamenává a po zavření je smazáno.</p>' },
-      { t: 'CO TĚ ČEKÁ', html: '<p>Záložka <b class="neon-cyan">KVÍZ</b>: 20+ otázek (Bloomova taxonomie) — i s <b class="neon-magenta">více správnými odpověďmi</b>. Za špatnou odpověď se zobrazí <b class="neon-orange">vysvětlení, proč</b>, a otázka se vrátí, dokud ji nezodpovíš správně (100 %). Za splnění: <b class="neon-green">certifikát kvízu</b> (PNG k stažení). Záložka <b class="neon-cyan">TRENAŽÉR HESEL</b> = samostatný certifikát z pravidel, <b class="neon-orange">OVĚŘENÍ ZNALOSTI</b> = prokazatelná zkouška bez ukládání.</p>' }
+      { t: 'LEETS PEAK SÁM NEZACHRÁNÍ', html: '<p>Leetspeak (<b class="neon-magenta">a→4, e→3, o→0</b>) jen změní vzhled hesla a pomůže si ho zapamatovat. Každý cracker zná leet tabulku: <b class="neon-orange">sám bezpečnost téměř nezvyšuje</b>. Opravdová síla je v délce a nepředvídatelném složení.</p>' },
+      { t: 'OVĚŘUJEME JAKO zxcvbn', html: '<p>Trenažér používá <b class="neon-cyan">mechaniku knihovny zxcvbn</b> (Dropbox): heslo rozloží na vzory, pozná leet, klávesnici, sekvence i data a spočítá <b class="neon-green">efektivní entropii</b>. Vše běží lokálně: heslo se nikam nezaznamenává a po zavření je smazáno.</p>' },
+      { t: 'CO TĚ ČEKÁ', html: '<p>Záložka <b class="neon-cyan">KVÍZ</b>: 20+ otázek (Bloomova taxonomie), i s <b class="neon-magenta">více správnými odpověďmi</b>. Za špatnou odpověď se zobrazí <b class="neon-orange">vysvětlení, proč</b>, a otázka se vrátí, dokud ji nezodpovíš správně (100 %). Za splnění: <b class="neon-green">certifikát kvízu</b> (PNG k stažení). Záložka <b class="neon-cyan">TRENAŽÉR HESEL</b> = samostatný certifikát z pravidel, <b class="neon-orange">OVĚŘENÍ ZNALOSTI</b> = prokazatelná zkouška bez ukládání.</p>' }
     ];
     let introIdx = 0;
     let quizState = 'intro';   // 'intro' | 'quiz' | 'done'
@@ -1600,20 +1600,20 @@
         options: ['část slovníku trenažéru', 'počet písmen v hesle', 'skupina znaků stejného druhu (malá / velká / číslice / symbol)', 'nastavení velikosti písma'],
         h: 1428679899, s: '', explain: 'Počet tříd = kolik druhů znaků heslo kombinuje (např. 3 třídy: malá + velká + číslice).' },
       { level: 'POROZUMĚNÍ', q: 'Proč je „kocour“ slabé heslo, i když je krátké a „sedí na jazyk“?',
-        options: ['neumí si je trenažér zapamatovat', 'má moc tříd znaků', 'je to slovo ze slovníku — cracker ho zkusí rovnou jako celek', 'je moc dlouhé na zadání'],
-        h: 1815712634, s: '', explain: 'Slovníkové slovo se nehádá znak po znaku, ale vyzkouší se předem jako celek — proto okamžitě končí.' },
+        options: ['neumí si je trenažér zapamatovat', 'má moc tříd znaků', 'je to slovo ze slovníku: cracker ho zkusí rovnou jako celek', 'je moc dlouhé na zadání'],
+        h: 1815712634, s: '', explain: 'Slovníkové slovo se nehádá znak po znaku, ale vyzkouší se předem jako celek: proto okamžitě končí.' },
       { level: 'POROZUMĚNÍ', multi: true, q: 'Ve kterých úložištích je bezpečné držet hesla? (vyber všechny správné)',
-        options: ['textový soubor „pověření.txt“ na ploše', 'správce hesel v prohlížeči (Google Password Manager — Hesla Google)', 'klíčenka operačního systému (Windows Credential Manager, macOS Klíčenka)', 'aplikace správce hesel (Bitwarden, KeePass) chráněná hlavním heslem'],
-        h: [4128578954, 2465221989, 3947788980], s: '', explain: 'Klíčenky a správci hesel uložená hesla šifrují a umí je i vygenerovat. Textový soubor na ploše si může přečíst kdokoli — to bezpečné úložiště není.' },
+        options: ['textový soubor „pověření.txt“ na ploše', 'správce hesel v prohlížeči (Google Password Manager: Hesla Google)', 'klíčenka operačního systému (Windows Credential Manager, macOS Klíčenka)', 'aplikace správce hesel (Bitwarden, KeePass) chráněná hlavním heslem'],
+        h: [4128578954, 2465221989, 3947788980], s: '', explain: 'Klíčenky a správci hesel uložená hesla šifrují a umí je i vygenerovat. Textový soubor na ploše si může přečíst kdokoli: to bezpečné úložiště není.' },
       { level: 'POROZUMĚNÍ', q: 'Proč leetspeak sám o sobě skoro nezvyšuje bezpečnost?',
         options: ['leetspeak hesla se nesmí ukládat', 'znaky v leet nejdou napsat na klávesnici', 'crackery mají stejné leet tabulky a „převlek“ rychle rozkryjí', 'leet funguje jen na velkých písmenech'],
-        h: 2915073659, s: '', explain: 'Najít společnou leet mapu je snadné — přidaná síla je jen pár bitů proti tomu, co slibuje délka.' },
+        h: 2915073659, s: '', explain: 'Najít společnou leet mapu je snadné: přidaná síla je jen pár bitů proti tomu, co slibuje délka.' },
       { level: 'POROZUMĚNÍ', multi: true, q: 'Google nabídne uložit heslo do Hesel Google. Které chování je správné? (vyber všechny)',
         options: ['neukládat, ale napsat heslo na papír nalepený k monitoru', 'uložit a heslo si pro jistotu poslat e-mailem', 'uložit a k účtu mít zapnuté dvoufázové ověření', 'uložit tak, aby bylo šifrované přes hlavní heslo účtu'],
         h: [3394894091, 2792241151], s: '', explain: 'Správce hesel v prohlížeči je běžně bezpečný hlavně s dvoufázovým ověřením. E-mail a papír u monitoru heslo prozradí.' },
       { level: 'POROZUMĚNÍ', q: 'Co znamená „efektivní entropie“ v trenažéru?',
         options: ['barva, kterou použije certifikát', 'počet znaků hesla vynásobený dvěma', 'reálný odhad síly hesla po rozkladu na vzory (slova, leet, data)', 'rychlost psaní hesla na klávesnici'],
-        h: 2200902044, s: '', explain: 'Síla se počítá tak, jak ji vidí útočník — včetně slovníků, leetu a vzorců, ne podle délky znaků.' },
+        h: 2200902044, s: '', explain: 'Síla se počítá tak, jak ji vidí útočník: včetně slovníků, leetu a vzorců, ne podle délky znaků.' },
       { level: 'APLIKACE', q: 'Chceš posílit heslo „kokrhanka“. Který krok udělá největší rozdíl?',
         options: ['přidej za slovo znak !', 'přepiš a→4', 'prodluž podle paměťové věty a přidej dvě třídy znaků', 'vyměň první písmeno za velké'],
         h: 1164002828, s: '', explain: 'Délka a třídy znaků dávají nejvíc bitů; přepis jednoho znaku je klidně jen pár bitů.' },
@@ -1628,24 +1628,24 @@
         h: 3538434430, s: '', explain: 'Klíčenka systému tajemství šifruje a otevře ho jen ověřené aplikaci. ZIP bez hesla, důmyslné názvy a papír šifrování nenahradí.' },
       { level: 'ANALÝZA', q: 'Které heslo je dlouhé, ale přesto slabé kvůli vzoru?',
         options: ['Tajenka2026.Orel', 'Mz4!Ban@nVeRk', 'a1a1a1a1a1a1a1a1a1', 'SkodaFabia.Zelen4!'],
-        h: 1134864519, s: '', explain: 'Opakování vzoru a1 je předvídatelné — efektivní entropie je nízká, i když je heslo dlouhé.' },
+        h: 1134864519, s: '', explain: 'Opakování vzoru a1 je předvídatelné: efektivní entropie je nízká, i když je heslo dlouhé.' },
       { level: 'ANALÝZA', q: 'Ve kterém heslu je vzor „procházka po klávesnici“?',
         options: ['Zakazkoody', 'Ostrava2026', 'qwertyui', 'MilaHana89'],
-        h: 2164137519, s: '', explain: 'qwerty jsou sousedící klávesy — takový vzor (keyboard-walk) cracker zkouší automaticky.' },
+        h: 2164137519, s: '', explain: 'qwerty jsou sousedící klávesy: takový vzor (keyboard-walk) cracker zkouší automaticky.' },
       { level: 'ANALÝZA', q: 'Proč je „P@ssw0rd“ známé, ale slabé heslo?',
-        options: ['používá diakritiku', 'neobsahuje velké písmeno', 'je to slovníková fráze s běžnou leet mapou — má ji cracker v seznamu', 'nemá žádnou číslici'],
-        h: 3263557332, s: '', explain: 'Záměna a→@ a o→0 je nasbíraná v seznamech slabých hesel — tahle „maskovaná“ hesla jsou dávno probraná.' },
+        options: ['používá diakritiku', 'neobsahuje velké písmeno', 'je to slovníková fráze s běžnou leet mapou: má ji cracker v seznamu', 'nemá žádnou číslici'],
+        h: 3263557332, s: '', explain: 'Záměna a→@ a o→0 je nasbíraná v seznamech slabých hesel: tahle „maskovaná“ hesla jsou dávno probraná.' },
       { level: 'ANALÝZA', q: 'Proč bys nedával(a) do hesla vlastní jména a data?',
         options: ['jsou moc dlouhé pro pole trenažéru', 'zkracují heslo pod požadovanou délku', 'tyto údaje jsou veřejné a crackery je zkoušejí mezi prvními', 'znemožňují použít leetspeak'],
-        h: 4026373286, s: '', explain: 'Osobní údaje najde útočník na sociálních sítích — patří do slovníku, ne do hesla.' },
+        h: 4026373286, s: '', explain: 'Osobní údaje najde útočník na sociálních sítích: patří do slovníku, ne do hesla.' },
       { level: 'HODNOCENÍ', q: 'Vyhodnoť heslo „MilujuNakupy2026“. Jaká je jeho největší slabina?',
-        options: ['je moc dlouhé pro zapamatování', 'má až moc tříd znaků', 'obsahuje běžná slova — útočník je zkusí jako celek', 'datum 2026 se v heslech nepoužívá'],
+        options: ['je moc dlouhé pro zapamatování', 'má až moc tříd znaků', 'obsahuje běžná slova: útočník je zkusí jako celek', 'datum 2026 se v heslech nepoužívá'],
         h: 1912919707, s: '', explain: 'Spojení běžných slov + rok je typický slovník, který se testuje dřív než jednotlivá hesla.' },
       { level: 'HODNOCENÍ', q: 'Srovnej (A) Kocour4!klub a (B) aaaaaaaaaaaaaa. Které tvrzení platí?',
-        options: ['A nemá dost tříd znaků', 'A je slabší než B', 'B je slabé i přes délku — opakování je vzor, ne síla', 'B je bezpečnější díky délce'],
+        options: ['A nemá dost tříd znaků', 'A je slabší než B', 'B je slabé i přes délku: opakování je vzor, ne síla', 'B je bezpečnější díky délce'],
         h: 3642365392, s: '', explain: 'Opakování se rozpozná okamžitě; A kombinuje délku, třídy a málo předvídatelnosti.' },
       { level: 'HODNOCENÍ', q: 'Heslo má 25 znaků, ale jen malá písmena (1 třída). Je bezpečné?',
-        options: ['záleží jen na barvě certifikátu', 'ano, délka je rozhodující', 'ne — jednotvárnost a slova/slabiky se dají uhodnout', 'ano, pokud obsahuje diakritiku'],
+        options: ['záleží jen na barvě certifikátu', 'ano, délka je rozhodující', 'ne: jednotvárnost a slova/slabiky se dají uhodnout', 'ano, pokud obsahuje diakritiku'],
         h: 3017383147, s: '', explain: 'Samé malé znaky = malý prostor; cracker zkusí slova a slabiky ze slovníku, ne znak po znaku.' },
       { level: 'HODNOCENÍ', q: 'Proč je lepší, aby hesla ukládal správce hesel, a ne „hlava“?',
         options: ['hesla se pak sama bezpečně posílají e-mailem', 'všechna hesla sjednotí na jedno, ať si pamatuješ jen je', 'pro každý účet vygeneruje jiné silné heslo a ty si nic nemusíš pamatovat', 'je to jediný zákonný způsob, jak hesla skladovat'],
@@ -1724,7 +1724,7 @@
       quizOptionsEl.innerHTML = '';
       quizFeedback.className = 'quiz-feedback';
       quizFeedback.textContent = curQ.retry > 0
-        ? 'Opakování #' + curQ.retry + ' — minule jsi odpověděl(a) špatně. Vrátí se, dokud ji nezodpovíš správně (100 %).'
+        ? 'Opakování #' + curQ.retry + ' minule jsi odpověděl(a) špatně. Vrátí se, dokud ji nezodpovíš správně (100 %).'
         : '';
       quizNextBtn.classList.add('trainer-hidden');
       const multi = !!curQ.multi;
@@ -1781,7 +1781,7 @@
       curQ.tries = (curQ.tries || 0) + 1;
       const firstTry = curQ.tries === 1;
       quizFeedback.className = 'quiz-feedback ' + (ok ? 'quiz-fb-ok' : 'quiz-fb-bad');
-      quizFeedback.textContent = (ok ? '✓ SPRÁVNĚ — ' : '✗ ŠPATNĚ — ') + curQ.explain;
+      quizFeedback.textContent = (ok ? '✓ SPRÁVNĚ: ' : '✗ ŠPATNĚ: ') + curQ.explain;
       if (ok) {
         if (firstTry) {
           quizOkWeight += bloomWeight(curQ);
@@ -1814,7 +1814,7 @@
       const weak = order.filter(lv => quizLevelStats[lv].ok < quizLevelStats[lv].total);
       let txt = '<div class="quiz-bloom-line">' + lines + '</div>';
       txt += weak.length
-        ? '<div class="text-xs dim-70" style="margin-top:0.5rem;">Slabší úrovně: <b style="color:#ff6600;">' + weak.join(', ') + '</b> — vrať se prosím k vysvětlením u špatných odpovědí.</div>'
+        ? '<div class="text-xs dim-70" style="margin-top:0.5rem;">Slabší úrovně: <b style="color:#ff6600;">' + weak.join(', ') + '</b>: vrať se prosím k vysvětlením u špatných odpovědí.</div>'
         : '<div class="text-xs dim-60" style="margin-top:0.5rem;">Všechny úrovně Bloomovy taxonomie zvládnuty hned napoprvé.</div>';
       return txt;
     }
@@ -1845,15 +1845,15 @@
     // ============ NÁPADY: rotující bezpečnostní tipy + žárovka ============
     const TIPS = [
       'Nejhorší hesla roku jsou pořád „123456“, „heslo“ a „qwerty“. Délka je první a nejlevnější obrana.',
-      'Heslo si zapamatuješ snáz z příběhu: „Rží u tučňáka je můj ZŠ tým 2026!“ → RžiuT!2026 — delší, náhodné, s třídami.',
+      'Heslo si zapamatuješ snáz z příběhu: „Rží u tučňáka je můj ZŠ tým 2026!“ → RžiuT!2026, delší, náhodné, s třídami.',
       'Počítačová klíčenka (Windows Credential Manager / macOS Klíčenka) je pro bankovnictví na počítači nejvhodnější úložiště.',
-      'Google Hesla (Password Manager) ukládá zaheslovaně a nejvíc chrání s dvoufázovým ověřením — klidně ho používej.',
+      'Google Hesla (Password Manager) ukládá zaheslovaně a nejvíc chrání s dvoufázovým ověřením: klidně ho používej.',
       'Stejné heslo na deseti webech = jeden únik = všechny účty pryč. Správce hesel tohle vyřeší za tebe.',
       'Sílu dělá délka + třídy znaků. Leetspeak „3“ místo „e“ u známého slova crackery jen tak nepotěší.',
       'E-mail od „banky“ s tlačítkem změníš heslo je 9× z 10 phishing. Hesla se nemění přes odkaz z e-mailu.',
-      'Dvoufázové ověření (2FA) je druhá zámková pojistka — i ukradené heslo je pak k ničemu.',
-      'Papír s hesly nalepený u monitoru je první místo, kam se digitalizovaný zloděj nedostane — ale občas přiblíží kameru.',
-      'SMS není 2FA úplně ideální — aplikace pro ověřování (authenticator) je bezpečnější a funguje i bez signálu.',
+      'Dvoufázové ověření (2FA) je druhá zámková pojistka: i ukradené heslo je pak k ničemu.',
+      'Papír s hesly nalepený u monitoru je první místo, kam se digitalizovaný zloděj nedostane: ale občas přiblíží kameru.',
+      'SMS není 2FA úplně ideální: aplikace pro ověřování (authenticator) je bezpečnější a funguje i bez signálu.',
       'Když heslo někam píšeš, zkontroluj URL lištu a okolí. Phishingová stránka nemusí poznat ani kvízový šampion.',
       'Vygenerované heslo ze správce hesel (16+ znaků) porazí každé „chytře vymyšlené“ heslo ze slovníku.'
     ];
@@ -1884,9 +1884,9 @@
     
     // ============ TRAINER (bezpečný režim: heslo jen v paměti) ============
     const trainerLevels = {
-      easy:   { name: 'LEHKÝ',  length: 8,  classes: 2, description: 'Pro začátek — minimální délka' },
-      medium: { name: 'STŘEDNÍ',length: 12, classes: 3, description: 'Běžné heslo — 3 třídy znaků' },
-      strong: { name: 'SILNÝ',  length: 16, classes: 4, description: 'Pro citlivé účty — 4 třídy a délka' }
+      easy:   { name: 'LEHKÝ',  length: 8,  classes: 2, description: 'Pro začátek: minimální délka' },
+      medium: { name: 'STŘEDNÍ',length: 12, classes: 3, description: 'Běžné heslo: 3 třídy znaků' },
+      strong: { name: 'SILNÝ',  length: 16, classes: 4, description: 'Pro citlivé účty: 4 třídy a délka' }
     };
     const TRAINER_ENTROPY = { easy: 25, medium: 45, strong: 70 }; // hranice pro laboratoř i ověření
     
@@ -1982,7 +1982,7 @@
       
       // Nápověda: co chybí
       if (pw === '') {
-        trainerHintNeeds.textContent = 'Vytvoř ideální heslo výše — trenažér ti postupně odhalí, co mu chybí.';
+        trainerHintNeeds.textContent = 'Vytvoř ideální heslo výše: trenažér ti postupně odhalí, co mu chybí.';
       } else if (firstFail) {
         trainerHintNeeds.textContent = '⚠ Chybí: ' + firstFail.label;
       } else {
@@ -1993,7 +1993,7 @@
       certifyBtn.disabled = !canCert;
       document.getElementById('certifyLabel').textContent = canCert
         ? 'POTVRDIT & ZOBRAZIT CERTIFIKÁT'
-        : '⛔ PASS — PRAVIDLA NESPLNĚNA';
+        : '⛔ PASS: PRAVIDLA NESPLNĚNA';
       updateTrainerAnalysis();
     }
     
@@ -2132,7 +2132,7 @@
     // deterministicky aplikovat (vždy jen do paměti, nikam se neukládá).
     
     function keyboardShiftVariant(s) {
-      // propojení s passmake funkcí keyboard_shift — „blízkost kláves“, rychlé psaní
+      // propojení s passmake funkcí keyboard_shift: „blízkost kláves“, rychlé psaní
       const map = leetData.keyboard_shift.map || {};
       return s.split('').map(c => {
         const l = c.toLowerCase();
@@ -2168,11 +2168,11 @@
       
       // Slabý vzor / slovo uhodnutelné → leet = lepší zápis, čitelné, jiný vzhled
       if (hasWeakPattern) {
-        add('VYLEPŠI LEETEM', 'a→4, e→3, o→0, s→5 — čitelné, přidá číslice a „jiný vzhled“', applyLeetSuggestion);
+        add('VYLEPŠI LEETEM', 'a→4, e→3, o→0, s→5: čitelné, přidá číslice a „jiný vzhled“', applyLeetSuggestion);
       }
       // Procházka po klávesnici → posun o klávesu = neznámý vzor, rychlé psaní
       if (analysis.patterns.some(p => p.type === 'walk' || p.type === 'sequence')) {
-        add('POSUN NA KLÁVESNICI', 'každé písmeno posuň o jednu klávesu (keyboard-shift) — jiný vzor, stále rychle zadatelné', keyboardShiftVariant);
+        add('POSUN NA KLÁVESNICI', 'každé písmeno posuň o jednu klávesu (keyboard-shift): jiný vzor, stále rychle zadatelné', keyboardShiftVariant);
       }
       // Chybí číslice / speciální znak → leet + oddělovač
       if (!hasDigit) {
@@ -2187,7 +2187,7 @@
       }
       // Chybí velké písmeno → první písmeno velkým
       if (!hasUpper && /[a-z]/.test(pw)) {
-        add('VELKÉ PÍSMENO', 'první písmeno zvětši — neuškodí rychlosti zadání', s => s.replace(/^([a-z])/, m => m.toUpperCase()));
+        add('VELKÉ PÍSMENO', 'první písmeno zvětši: neuškodí rychlosti zadání', s => s.replace(/^([a-z])/, m => m.toUpperCase()));
       }
       return list.slice(0, 4);
     }
@@ -2203,9 +2203,9 @@
     function weakToText(w) {
       const map = {
         pattern: 'slabý vzor (známé slovo/heslo) snižuje skutečnou sílu hesla',
-        classes: 'kombinuje málo druhů znaků — přidej velké/číslici/symbol',
+        classes: 'kombinuje málo druhů znaků, přidej velké/číslici/symbol',
         length: 'heslo je krátké, kryptograficky slabé',
-        typing: 'hodně Shift/alt znaků — pomalé a chybové zadávání',
+        typing: 'hodně Shift/alt znaků, pomalé a chybové zadávání',
         empty: 'zadej heslo pro analýzu'
       };
       return map[w] || 'heslo vypadá v pořádku';
@@ -2226,7 +2226,7 @@
       const isOk = a.weakPoint === 'ok' || a.weakPoint === 'empty';
       trainerWeak.className = 'trainer-weak' + (isOk ? ' ok' : '');
       trainerWeak.textContent = pw === ''
-        ? 'Vytvoř ideální heslo výše — program prozkoumá jeho kvalitu a nabídne vylepšení.'
+        ? 'Vytvoř ideální heslo výše: program prozkoumá jeho kvalitu a nabídne vylepšení.'
         : (isOk ? '✓ ' : '⚠ ') + weakToText(a.weakPoint);
       
       // nabídky transformací
@@ -2413,7 +2413,7 @@
     certifyBtn.addEventListener('click', () => {
       if (trainerDone) return;
       if (!studentNameOk()) {
-        trainerHintNeeds.textContent = '⚠ Nejdřív vyplň jméno pro certifikát (pole nad heslem) — bez jména certifikát nepřipravíme.';
+        trainerHintNeeds.textContent = '⚠ Nejdřív vyplň jméno pro certifikát (pole nad heslem): bez jména certifikát nepřipravíme.';
         document.getElementById('certNameInput').focus();
         return;
       }
@@ -2421,7 +2421,7 @@
       const rules = trainRulesFor(currentLevel);
       const allOk = pw.length > 0 && rules.every(r => r.test(pw));
       if (!allOk) {
-        trainerHintNeeds.textContent = '⚠ Ještě nejsou splněny všechny požadavky — nelze přejít na certifikát.';
+        trainerHintNeeds.textContent = '⚠ Ještě nejsou splněny všechny požadavky: nelze přejít na certifikát.';
         return;
       }
       // Spustíme certifikační tok. Heslo držíme jen v trainerSecret (== pw).
@@ -2517,7 +2517,7 @@
         .replace(/^_+|_+$/g, '');
       return (ascii || 'student');
     }
-    // STÁHNOUT certifikát jako PNG (ikona šipky) — kreslí se do canvasu, heslo nikdy nekreslí
+    // STÁHNOUT certifikát jako PNG (ikona šipky): kreslí se do canvasu, heslo nikdy nekreslí
     function downloadCertPNG() {
       if (!certPalette) return;
       const d = new Date();
@@ -2566,7 +2566,7 @@
       }
       // student
       cx.fillStyle = 'rgba(201,212,255,0.92)'; cx.font = 'bold 24px "Courier New"';
-      cx.fillText('Student: ' + (studentName || '—'), W / 2, 436);
+      cx.fillText('Student: ' + (studentName || ', '), W / 2, 436);
       // paleta
       cx.fillStyle = certPalette.a; cx.font = 'bold 22px "Courier New"';
       cx.fillText('PALETA ' + certPalette.code + ' · ' + certPalette.name, W / 2, 476);
@@ -2575,7 +2575,7 @@
       cx.fillText('Datum: ' + dateStr + ' · ' + timeStr, W / 2, 512);
       // bezpečnostní poznámka
       cx.fillStyle = 'rgba(150,170,220,0.75)'; cx.font = '16px "Courier New"';
-      cx.fillText('Heslo se nikde neukládá — certifikát heslo nikdy neobsahuje.', W / 2, 700);
+      cx.fillText('Heslo se nikde neukládá: certifikát heslo nikdy neobsahuje.', W / 2, 700);
       cx.fillText('GPLv3 · © 2026 Luděk Sušický', W / 2, 740);
       
       const url = cv.toDataURL('image/png');
@@ -2625,7 +2625,7 @@
       trainerHintNeeds.textContent = 'Heslo bylo bezpečně smazáno z paměti stránky. Nic se neukládá.';
       trainerProgress.textContent = '';
       certifyBtn.disabled = true;
-      document.getElementById('certifyLabel').textContent = '⛔ PASS — PRAVIDLA NESPLNĚNA';
+      document.getElementById('certifyLabel').textContent = '⛔ PASS: PRAVIDLA NESPLNĚNA';
       metricEntropy.textContent = '0 bitů';
       metricEntropyFill.style.width = '0%';
       metricTyp.textContent = '100 %';
@@ -2681,7 +2681,7 @@
     
     renderLevelCards();
     renderRules();
-  </script>
+  </script>``
 </body>
 </html>
 
