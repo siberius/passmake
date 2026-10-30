@@ -20,7 +20,7 @@ pravidel platí přísnější.
 
 ### Architektura
 - Celá aplikace v jediném `passmake.html`: UI, styly i data (leet mapy, profily,
-  úrovně trenéra, kvízové otázky) jsou inline v jednom souboru. Žádný build.
+  úrovně trenéra, kvízové otázky) jsou inline v jednom souboru. Žádný build. Instalaci doplňují manifest, service worker a ikony; přímé otevření HTML zůstává funkční.
 - Data leet speaku žijí v `leetData` a souvisejících datových strukturách;
   nové znaky/náhrady doplňovat tam, ne duplikovat jinde.
 
@@ -32,7 +32,7 @@ pravidel platí přísnější.
 - Nepřidávat žádnou persistenci ani telemetrii, která by hesla zaznamenávala.
 
 ### Konvence
-- UI texty a komentáře česky; kód, identifikátory a názvy funkcí anglicky.
+- UI česky a anglicky; kód a identifikátory anglicky. Překlad upravuje jen texty rozhraní, nikoli hodnoty polí, jména ani data odpovědí.
 - Zůstat statický a offline — fungovat z lokálního `passmake.html` (dvojklik).
 
 ## Spuštění / testy
@@ -43,3 +43,9 @@ pravidel platí přísnější.
   - per-znaková mapa + reverzní náhrady, síla hesla,
   - trenér: generátor/analýza hesla, pravidla obtížnosti, kvízová brána,
   - certifikát: export PNG, ověřit, že v obrázku není znak hesla.
+## Verze 2.0
+- Hlavní jazyk prohlížeče cs volí češtinu, ostatní angličtinu. Ruční volba v passmake-language má přednost; jen jazyk se smí ukládat.
+- PWA cache obsahuje pouze explicitní seznam souborů aplikace. Při změně obsahu zvýšit verzi v sw.js.
+- Veřejné README.md, README.cs.md a docs/VERIFICATION.md jsou určené pro GitHub.
+- Model síly hesla je vlastní heuristika, nikoli knihovna zxcvbn. Nepopisovat jej jako bezpečnostní audit.
+- Známkování kvízu se opírá o původní české řetězce, nikdy o přeložený text tlačítka.

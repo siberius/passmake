@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><defs>
+<linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101d32"/><stop offset="1" stop-color="#070915"/></linearGradient>
+<radialGradient id="halo"><stop stop-color="#008fa8" stop-opacity=".35"/><stop offset="1" stop-color="#020713" stop-opacity="0"/></radialGradient>
+<linearGradient id="edge" x2=".8" y2="1"><stop stop-color="#a0ffff"/><stop offset=".45" stop-color="#00d8f0"/><stop offset="1" stop-color="#2263bd"/></linearGradient>
+<linearGradient id="metal" x2="1" y2="1"><stop stop-color="#263b50"/><stop offset=".5" stop-color="#102638"/><stop offset="1" stop-color="#070e1f"/></linearGradient>
+<linearGradient id="lock" x2=".8" y2="1"><stop stop-color="#f2a6ff"/><stop offset=".5" stop-color="#e941f2"/><stop offset="1" stop-color="#8537ff"/></linearGradient>
+<filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="8"/></filter></defs>
+<path fill="url(#bg)" d="M0 0h512v512H0z"/><circle cx="256" cy="256" r="250" fill="url(#halo)"/>
+<g >
+<g fill="none" stroke="#14768c" stroke-width="3"><path d="M135 180H95l-24-24H48M377 180h40l24-24h23M135 254H66M377 254h69M150 340h-40l-28 28H48M362 340h40l28 28h34"/><path d="M196 112V78l-20-20M316 112V78l20-20M210 393v48M302 393v48"/></g>
+<g fill="#72ecf5"><circle cx="66" cy="254" r="5"/><circle cx="446" cy="254" r="5"/><circle cx="82" cy="368" r="4"/><circle cx="430" cy="368" r="4"/></g>
+<path d="M256 89L383 145V255C383 329 329 383 256 420C183 383 129 329 129 255V145Z" fill="none" stroke="#00dff5" stroke-width="12" opacity=".38" filter="url(#glow)"/>
+<path d="M256 89L383 145V255C383 329 329 383 256 420C183 383 129 329 129 255V145Z" fill="url(#metal)" stroke="url(#edge)" stroke-width="5"/>
+<path d="M256 108L366 157V255C366 318 318 368 256 400C194 368 146 318 146 255V157Z" fill="none" stroke="#6ce6ef" stroke-opacity=".22" stroke-width="2"/>
+<path d="M211 231V201a45 45 0 0190 0v30" fill="none" stroke="#ee80ff" stroke-width="13" opacity=".45" filter="url(#glow)"/>
+<path d="M211 231V201a45 45 0 0190 0v30" fill="none" stroke="url(#lock)" stroke-width="13"/>
+<rect x="191" y="226" width="130" height="102" rx="18" fill="url(#lock)"/>
+<path d="M205 239h102" stroke="#ffe4ff" stroke-opacity=".6" stroke-width="2" stroke-linecap="round"/>
+<path d="M256 254a14 14 0 00-8 25l-4 23h24l-4-23a14 14 0 00-8-25" fill="#11172c"/>
+<path d="M238 356h36" stroke="#4ff0fa" stroke-width="4" stroke-linecap="round"/>
+</g></svg>

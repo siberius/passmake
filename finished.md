@@ -1,5 +1,12 @@
 # finished.md — passmake
 
+## 2026-10-30 · Verze 2.0
+- Česká a anglická aplikace včetně kvízu, nápovědy a certifikátů; automatický jazyk podle prohlížeče a uložená ruční volba bez ztráty stavu.
+- PWA instalace, offline cache bez uživatelských dat, mobilní Safari a cyber-tech SVG/PNG ikony pro Android a iPhone.
+- Opraveno šest zastaralých klíčů odpovědí, bezpečné vykreslení jména certifikátu a staré GPL popisky sladěny s MIT.
+- Ověřeno: 23 otázek, 16 kombinací převodu, soukromí a certifikáty bez hesla, offline i file://, WebKit a Chromium, mobil/tablet/desktop. Podrobnosti docs/VERIFICATION.md. Fyzická instalace neověřena. FTP nasazení neproběhlo.
+- Autor schválil zveřejnění existujícího siberius/passmake pod MIT.
+
 ## 2026-09-28 — Bio bez koncové tečky (commit `8957e1d`, auto-backup 10:30)
 - `passmake.html` (Kredit) + `README.md`: popisek „biolog, středoškolský a vysokoškolský učitel informatických předmětů" bez tečky na konci (master pravidlo); zrcadleno do `school/passmake.html`.
 - Ověření: cílená kontrola řádků + shoda zrcadel (`diff -q`); FTP upload na `vibemaker.cz/school/`.
