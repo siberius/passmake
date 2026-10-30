@@ -57,3 +57,7 @@ MIT, copyright © 2026 Luděk Sušický. Viz [LICENSE](LICENSE).
 Luděk Sušický: biolog, středoškolský a vysokoškolský učitel informatických předmětů
 
 [Repozitář na GitHubu](https://github.com/siberius/passmake)
+
+### Poznámka k autorství
+
+Při vývoji programu byly využity nástroje generativní AI. Návrh vzdělávacího obsahu, jeho úpravy a odpovědnost za výslednou podobu náleží autorovi.
