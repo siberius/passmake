@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1 · 2026-10-30
+
+- Cyberpunk menu scrollbar with a dark track and cyan/violet thumb
+- Česky: tmavý posuvník menu s neonovým jezdcem
+
 ## 2.0 · 2026-10-30
 
 - Czech/English UI, quiz, feedback and certificates; automatic browser-language selection and a saved manual override

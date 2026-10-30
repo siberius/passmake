@@ -1,7 +1,7 @@
 /* Cache only application assets, never user inputs or generated content. */
 'use strict';
 const PREFIX='cyber-passmake-';
-const CACHE=PREFIX+'2026-10-30-v2';
+const CACHE=PREFIX+'2026-10-30-v2.0.1';
 const ASSETS=['./','./index.html','./passmake.html','./manifest.webmanifest','./icons/favicon.svg','./icons/apple-touch-icon.png','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith(PREFIX)&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));

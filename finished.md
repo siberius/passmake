@@ -1,5 +1,8 @@
 # finished.md — passmake
 
+## 2026-10-30 · Verze 2.0.1
+- Cyberpunk posuvník menu: tmavá drážka, neonový azurovo-fialový jezdec, bez systémových šipek. Ověřeny vypočtené styly i skutečné posouvání při 390 px; vizuálně zkontrolováno. Cache aktualizována. GitHub aktualizován, FTP beze změny.
+
 ## 2026-10-30 · Verze 2.0
 - Česká a anglická aplikace včetně kvízu, nápovědy a certifikátů; automatický jazyk podle prohlížeče a uložená ruční volba bez ztráty stavu.
 - PWA instalace, offline cache bez uživatelských dat, mobilní Safari a cyber-tech SVG/PNG ikony pro Android a iPhone.
