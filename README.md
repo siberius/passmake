@@ -58,7 +58,16 @@ Leet substitutions, character-class counts and the displayed entropy score do no
 
 MIT, copyright © 2026 Luděk Sušický. See [LICENSE](LICENSE).
 
-Luděk Sušický: biologist and secondary-school and university teacher of computing subjects · [@siberius on GitHub](https://github.com/siberius)
+### Author
+
+**Luděk Sušický** — biologist, secondary-school and university teacher of computing subjects
+
+- E-mail: [ludek.susicky@gmail.com](mailto:ludek.susicky@gmail.com)
+- X: [@ludeksusicky](https://x.com/ludeksusicky)
+- LinkedIn: [Luděk Sušický](https://www.linkedin.com/in/ludek-susicky/)
+- GitHub: [@siberius](https://github.com/siberius) — more educational projects and open-source applications
+
+The app is an example of an SPA (Single Page Application) in a single HTML file.
 
 [GitHub repository](https://github.com/siberius/passmake)
 

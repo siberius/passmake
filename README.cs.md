@@ -58,7 +58,16 @@ Leet, počet tříd znaků ani odhad entropie samy nepotvrzují bezpečnost hesl
 
 MIT, copyright © 2026 Luděk Sušický. Viz [LICENSE](LICENSE).
 
-Luděk Sušický: biolog, středoškolský a vysokoškolský učitel informatických předmětů · [@siberius na GitHubu](https://github.com/siberius)
+### Autor
+
+**Luděk Sušický** — biolog, středoškolský a vysokoškolský učitel informatických předmětů
+
+- E-mail: [ludek.susicky@gmail.com](mailto:ludek.susicky@gmail.com)
+- X: [@ludeksusicky](https://x.com/ludeksusicky)
+- LinkedIn: [Luděk Sušický](https://www.linkedin.com/in/ludek-susicky/)
+- GitHub: [@siberius](https://github.com/siberius) — další vzdělávací projekty a otevřené aplikace
+
+Aplikace je příkladem SPA (Single Page Application) v jediném HTML souboru.
 
 [Repozitář na GitHubu](https://github.com/siberius/passmake)
 
