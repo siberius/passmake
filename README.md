@@ -54,7 +54,7 @@ Leet substitutions, character-class counts and the displayed entropy score do no
 
 MIT, copyright © 2026 Luděk Sušický. See [LICENSE](LICENSE).
 
-Luděk Sušický: biologist and secondary-school and university teacher of computing subjects
+Luděk Sušický: biologist and secondary-school and university teacher of computing subjects · [@siberius on GitHub](https://github.com/siberius)
 
 [GitHub repository](https://github.com/siberius/passmake)
 
