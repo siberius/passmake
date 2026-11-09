@@ -2,19 +2,23 @@
 
 [English](README.md)
 
+> 🚀 **Spustit online v prohlížeči:** [https://school.vibemaker.cz/passmake/](https://school.vibemaker.cz/passmake/)  
+> *(Běží přímo v prohlížeči · PWA offline · Bez instalace a registrace)*
+
+[![Cyber Passmake náhled](docs/passmake.gif)](https://school.vibemaker.cz/passmake/)
+
 Česká a anglická výuková aplikace pro leetspeak, rozpoznávání předvídatelných hesel a práci s hesly. Obsahuje převodník textu, kvíz s 23 otázkami, trenažér, ověření znalosti a PNG certifikáty.
 
 Procvičuj na smyšlených heslech. Jde o výukový model, nikoli správce hesel nebo bezpečnostní audit. Vlastní zjednodušený analyzátor se inspiruje rozpoznáváním vzorů; knihovnu zxcvbn neobsahuje. Skóre ani certifikát nepotvrzují bezpečnost hesla.
 
 ## Spuštění
 
-Otevři `passmake.html` dvojklikem, nebo spusť ve složce:
+Aplikace nepotřebuje sestavení, backend ani instalaci závislostí:
 
-```sh
-python3 -m http.server 8138 --bind 127.0.0.1
-```
+1. **Online:** Otevři [https://school.vibemaker.cz/passmake/](https://school.vibemaker.cz/passmake/)
+2. **Offline / Lokálně:** Otevři `passmake.html` přímo v libovolném moderním prohlížeči (dvojklik stačí).
 
-Potom otevři [localhost:8138](http://localhost:8138/). Aplikace nepotřebuje sestavení, účet, backend ani instalaci závislostí. Přidání na plochu a cache vyžadují HTTPS nebo localhost. Kořenový `index.html` odkazuje na zachovaný vstup `passmake.html`.
+Kořenový `index.html` přesměrovává na hlavní vstup `passmake.html`. Přidání na plochu a automatická offline cache fungují při spuštění přes zabezpečené HTTPS.
 
 ## Jazyky
 

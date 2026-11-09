@@ -2,19 +2,23 @@
 
 [Česky](README.cs.md)
 
+> 🚀 **Online verze / Live web app:** [https://school.vibemaker.cz/passmake/](https://school.vibemaker.cz/passmake/)  
+> *(Run directly in your browser · Offline-ready PWA · No registration)*
+
+[![Cyber Passmake preview](docs/passmake.gif)](https://school.vibemaker.cz/passmake/)
+
 A Czech/English teaching app for exploring leetspeak, predictable password patterns and password habits. It includes a text transformer, a 23-question quiz, a password trainer, a skills-check tab and downloadable PNG certificates.
 
 Use made-up passwords for practice. This is an educational model, not a password manager or a security assessment. Its hand-written strength estimator is inspired by pattern detection; it does not include the zxcvbn library. Scores and certificates show completion of the exercise, not proof that a password is safe.
 
 ## Run
 
-Open `passmake.html` directly for the application, or serve this folder:
+No build, backend or dependencies are required:
 
-```sh
-python3 -m http.server 8138 --bind 127.0.0.1
-```
+1. **Online:** Open [https://school.vibemaker.cz/passmake/](https://school.vibemaker.cz/passmake/)
+2. **Offline / Local:** Open `passmake.html` directly in any modern browser (double-click is enough).
 
-Open [localhost:8138](http://localhost:8138/). No build, dependencies, account or backend is needed. Installation and offline caching require HTTPS or localhost. The root `index.html` forwards to the existing `passmake.html` entry point.
+The root `index.html` forwards to the `passmake.html` application entry point. PWA installation and offline caching activate when served over HTTPS.
 
 ## Languages
 
